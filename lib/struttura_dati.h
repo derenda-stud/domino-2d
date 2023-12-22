@@ -8,7 +8,7 @@ typedef struct s_dato {
     unsigned int cardine;
 } dato;
 
-// Genera gli estremi delle tessera nella mano del giocatore
-void genera_tessere(unsigned int *mano_giocatore, size_t dimensione);
+// Stampa delle tessere presenti in ogni riga del piano di gioco
+void stampa_piano(dato **piano_gioco, size_t righe, size_t colonne);
 
 #endif
