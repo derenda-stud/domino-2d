@@ -3,8 +3,49 @@
 
 #include "../lib/struttura_dati.h"
 
+mano_t *crea_mano(unsigned int numero_tessere) {
+    // Alloca la memoria per il puntatore iniziale
+    mano_t *mano_giocatore = malloc(sizeof(mano_t));
+    // Inizializza i parametri allocando la memoria per le tessere
+    mano_giocatore->tessere = malloc(sizeof(tessera_t) * numero_tessere);
+    // Memorizza la dimensione attuale dell'array
+    mano_giocatore->dimensione = numero_tessere;
+    // Ritorna il puntatore alla struttura dati creata
+    return mano_giocatore;
+}
+
+void genera_tessere(mano_t *mano_giocatore) {
+    // Per ciascuna posizione nella mano
+    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
+        // Inizializza una tessera con estremi casuali
+        mano_giocatore->tessere[i].estremo_sinistro = rand() % 6 + 1;
+        mano_giocatore->tessere[i].estremo_destro = rand() % 6 + 1;
+    }
+}
+
+void stampa_mano(mano_t *mano_giocatore) {
+    // Stampa le tessere nella mano del giocatore
+    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
+        printf("[%d|%d] ", mano_giocatore->tessere[i].estremo_sinistro, mano_giocatore->tessere[i].estremo_destro);
+    }
+    printf("\n");
+    // Stampa gli indici per ogni tessera
+    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
+        printf("  %d   ", i);
+    }
+    printf("\n");
+}
+
+void libera_mano(mano_t *mano_giocatore) {
+    // Libera la memoria occupata dalle tessere
+    free(mano_giocatore->tessere);
+    mano_giocatore->tessere = NULL;
+    // Libera la memoria del puntatore iniziale
+    free(mano_giocatore);
+}
+
 piano_t *crea_piano(unsigned int colonne) {
-    // Alloca la memoria necessaria a memorizzare il piano di gioco
+    // Alloca la memoria necessaria per memorizzare il piano di gioco
     piano_t *piano_gioco = malloc(sizeof(piano_t));
     // Inizializza i parametri del piano di gioco
     piano_gioco->posizione = NULL;
@@ -25,10 +66,10 @@ void aggiungi_riga(piano_t *piano_gioco) {
 
 void stampa_piano(piano_t *piano_gioco) {
     // Per ogni riga nel piano di gioco
-    for(int i=0; i<piano_gioco->righe; i++) {
+    for(size_t i=0; i<piano_gioco->righe; i++) {
         printf("Stampo la riga con indice %d\n", i);
         // Stampa gli estremi in ciascuna colonna
-        for(int j=0; j<piano_gioco->colonne; j++) {
+        for(size_t j=0; j<piano_gioco->colonne; j++) {
             // Controlla che siano stati inseriti
             if(piano_gioco->posizione[i][j].estremo != 0) {
                 printf("%d", piano_gioco->posizione[i][j].estremo);
@@ -43,7 +84,7 @@ void stampa_piano(piano_t *piano_gioco) {
 
 void libera_piano(piano_t *piano_gioco) {
     // Libera tutte le righe del piano di gioco
-    for(int i=0; i<piano_gioco->righe; i++) {
+    for(size_t i=0; i<piano_gioco->righe; i++) {
         free(piano_gioco->posizione[i]);
         piano_gioco->posizione[i] = NULL;
     }
