@@ -65,33 +65,41 @@ void aggiungi_riga(piano_t *piano_gioco) {
 }
 
 void stampa_piano(piano_t *piano_gioco) {
+    // Stampa gli indici degli estremi
+    printf("  ");
+    for(size_t i=0; i<piano_gioco->colonne; i++) {
+        printf(" %2d ", i);
+    }
+    printf("\n");
     // Per ogni riga nel piano di gioco
     for(size_t i=0; i<piano_gioco->righe; i++) {
+        // Stampa la riga attuale
+        printf("%2d", i);
         // Stampa gli estremi in ciascuna colonna
         for(size_t j=0; j<piano_gioco->colonne; j++) {
             // In base al valore assunto dal cardine
             switch(piano_gioco->posizione[i][j].cardine) {
                 // Stampa correttamente l'estremo
                 case 'N': {
-                    printf("{%d", piano_gioco->posizione[i][j].estremo);
+                    printf(" {%d ", piano_gioco->posizione[i][j].estremo);
                     break;
                 }
                 case 'S': {
-                    printf("%d}", piano_gioco->posizione[i][j].estremo);
+                    printf(" %d} ", piano_gioco->posizione[i][j].estremo);
                     break;
                 }
                 case 'E': {
-                    printf("[%d", piano_gioco->posizione[i][j].estremo);
+                    printf(" [%d ", piano_gioco->posizione[i][j].estremo);
                     break;
                 }
                 case 'O': {
-                    printf("%d]", piano_gioco->posizione[i][j].estremo);
+                    printf(" %d] ", piano_gioco->posizione[i][j].estremo);
                     break;
                 }
                 // Quando non e' stato memorizzato un valore
                 default: {
                     // Stampa uno spazio vuoto
-                    printf("  ");
+                    printf(" -- ");
                     break;
                 }
             }

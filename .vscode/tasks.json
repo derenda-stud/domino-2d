@@ -12,6 +12,7 @@
                 "-g",
                 "main.c",
                 "struttura_dati.c",
+                "controlli.c",
                 "modalita_interattiva.c",
                 "-o",
                 "${fileDirname}\\iap.exe"

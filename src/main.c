@@ -26,7 +26,7 @@ int main() {
     for(int i=0; i<3; i++) {
         aggiungi_riga(piano_gioco);
     }
-    size_t centro = colonne / 2;
+    size_t centro = colonne / 2 - 1;
     // 8 tessere = 30 colonne = posizioni [0:29]
     piano_gioco->posizione[0][centro + 0].estremo = 5;
     piano_gioco->posizione[0][centro + 0].cardine = 'E';
