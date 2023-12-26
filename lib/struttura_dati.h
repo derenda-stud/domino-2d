@@ -3,6 +3,12 @@
 
 #include <stdio.h>
 
+// Posizione del cursore dove inserire le tessere
+typedef struct s_coord {
+    unsigned int x;
+    unsigned int y;
+} coord_t;
+
 // Estremi contenuti dentro le tessere nella mano del giocatore
 typedef struct s_tessera {
     unsigned int estremo_sinistro;
