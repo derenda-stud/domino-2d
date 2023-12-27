@@ -28,40 +28,40 @@ int main() {
     }
     size_t centro = colonne / 2 - 1;
     // 8 tessere = 30 colonne = posizioni [0:29]
-    piano_gioco->posizione[0][centro + 0].estremo = 5;
+    /* piano_gioco->posizione[0][centro + 0].valore = 5;
     piano_gioco->posizione[0][centro + 0].cardine = 'E';
-    piano_gioco->posizione[0][centro + 1].estremo = 1;
+    piano_gioco->posizione[0][centro + 1].valore = 1;
     piano_gioco->posizione[0][centro + 1].cardine = 'O';
     
-    piano_gioco->posizione[0][centro + 2].estremo = 1;
+    piano_gioco->posizione[0][centro + 2].valore = 1;
     piano_gioco->posizione[0][centro + 2].cardine = 'E';
-    piano_gioco->posizione[0][centro + 3].estremo = 6;
+    piano_gioco->posizione[0][centro + 3].valore = 6;
     piano_gioco->posizione[0][centro + 3].cardine = 'O';
     
-    piano_gioco->posizione[0][centro + 4].estremo = 6;
+    piano_gioco->posizione[0][centro + 4].valore = 6;
     piano_gioco->posizione[0][centro + 4].cardine = 'S';
-    piano_gioco->posizione[1][centro + 4].estremo = 2;
+    piano_gioco->posizione[1][centro + 4].valore = 2;
     piano_gioco->posizione[1][centro + 4].cardine = 'N';
     
-    piano_gioco->posizione[1][centro + 2].estremo = 3;
+    piano_gioco->posizione[1][centro + 2].valore = 3;
     piano_gioco->posizione[1][centro + 2].cardine = 'E';
-    piano_gioco->posizione[1][centro + 3].estremo = 2;
+    piano_gioco->posizione[1][centro + 3].valore = 2;
     piano_gioco->posizione[1][centro + 3].cardine = 'O';
     
-    piano_gioco->posizione[0][centro - 1].estremo = 5;
+    piano_gioco->posizione[0][centro - 1].valore = 5;
     piano_gioco->posizione[0][centro - 1].cardine = 'S';
-    piano_gioco->posizione[1][centro - 1].estremo = 6;
+    piano_gioco->posizione[1][centro - 1].valore = 6;
     piano_gioco->posizione[1][centro - 1].cardine = 'N';
     
-    piano_gioco->posizione[1][centro - 3].estremo = 4;
+    piano_gioco->posizione[1][centro - 3].valore = 4;
     piano_gioco->posizione[1][centro - 3].cardine = 'E';
-    piano_gioco->posizione[1][centro - 2].estremo = 6;
+    piano_gioco->posizione[1][centro - 2].valore = 6;
     piano_gioco->posizione[1][centro - 2].cardine = 'O';
     
-    piano_gioco->posizione[1][centro + 0].estremo = 6;
+    piano_gioco->posizione[1][centro + 0].valore = 6;
     piano_gioco->posizione[1][centro + 0].cardine = 'S';
-    piano_gioco->posizione[2][centro + 0].estremo = 3;
-    piano_gioco->posizione[2][centro + 0].cardine = 'N';
+    piano_gioco->posizione[2][centro + 0].valore = 3;
+    piano_gioco->posizione[2][centro + 0].cardine = 'N'; */
     
     // Generazione delle tessere nella mano del giocatore
     genera_tessere(mano_giocatore);

@@ -8,65 +8,40 @@ void stampa_turno(mano_t *mano_giocatore, piano_t *piano_gioco) {
     // Stampa per la prima volta le tessere della mano del giocatore
     stampa_mano(mano_giocatore);
     // Proseguimento della partita
+    
+    coord_t *posizioni = calcola_posizioni(piano_gioco, &dimensione);
+    mosse_disponibili(mano_giocatore, piano_gioco, posizioni);
+    
+    // posizione successiva e precedente
+/*     posizioni[i].riga, posizioni[i].colonna;
+    // orizzontale sx
+    piano_gioco->posizione[riga][colonna + 0].valore/.cardine;
+    piano_gioco->posizione[riga][colonna - 1].valore/.cardine;
+    // orizzontale dx
+    piano_gioco->posizione[riga][colonna + 0].valore/.cardine;
+    piano_gioco->posizione[riga][colonna + 1].valore/.cardine;
+    // verticale
+    piano_gioco->posizione[riga + 0][colonna].valore/.cardine;
+    piano_gioco->posizione[riga + 1][colonna].valore/.cardine; */
+    
     stampa_piano(piano_gioco);
     stampa_cursori(piano_gioco);
     coord_t temp = {1, 15};
-    coord_t precedente = temp, successivo = temp;
-    for(int i=0; i<10; i++) {
-        printf("Precedente: (%2d,%2d)\n", precedente.x, precedente.y);
-        printf("Successivo: (%2d,%2d)\n\n", successivo.x, successivo.y);
-        precedente = cursore_precedente(piano_gioco, precedente);
-        successivo = cursore_successivo(piano_gioco, successivo);
-    }
 }
+/*
+if(ha_premuto 'A') -> -1
+if(ha_premuto 'D') -> +1
 
-coord_t cursore_precedente(piano_t *piano_gioco, coord_t successivo) {
-    // Partendo dalla riga della coordinata successiva
-    for(int i=successivo.x; i>=0; i--) {
-        // Scorri tutte le colonne a ritroso
-        int j;
-        // Per il primo controllo comincia dalla colonna precedente
-        if(i == successivo.x) j = successivo.y - 1;
-        // Altrimenti comincia dall'ultima colonna
-        else j = piano_gioco->colonne - 1;
-        while(j>=0) {
-            // Se ho trovato una posizione valida
-            if(posizione_valida(piano_gioco, i, j)) {
-                // Ritorno le nuove coordinate
-                return (coord_t) {i, j};
-            }
-            // Vai alla colonna precedente
-            j--;
-        }
-    }
-    // Se scorrendo il piano non ho trovato nuove posizioni ritorno quella attuale
-    return successivo;
-}
+if(ha_premuto 'Invio') ->posiziona(cursore[i]);
 
-coord_t cursore_successivo(piano_t *piano_gioco, coord_t precedente) {
-    // Partendo dalla riga della coordinata precedente
-    for(int i=precedente.x; i<piano_gioco->righe; i++) {
-        // Scorri tutte le colonne in avanti
-        int j;
-        // Per il primo controllo comincia dalla colonna successiva
-        if(i == precedente.x) j = precedente.y + 1;
-        // Altrimenti comincia dalla prima colonna
-        else j = 0;
-        while(j<piano_gioco->colonne - 1) {
-            // Se ho trovato una posizione valida
-            if(posizione_valida(piano_gioco, i, j)) {
-                // Ritorno le nuove coordinate
-                return (coord_t) {i, j};
-            }
-            // Vai alla colonna successiva
-            j++;
-        }
-    }
-    // Se scorrendo il piano non ho trovato nuove posizioni ritorno quella attuale
-    return precedente;
-}
+cursore = sposta_cursore(cursori, 1/-1);
 
-void stampa_cursori(piano_t *piano_gioco) {
+if(nuovo_indice < 0 || nuovo_indice > dimensione - 1) return cursore[attuale];
+else return cursore[attuale + nuovo_indice];
+
+*/
+
+coord_t *calcola_posizioni(piano_t *piano_gioco) {
     printf("Posizioni valide in relazione al centro:\n");
     // Per ciascuna riga
     for(size_t i=0; i<piano_gioco->righe; i++) {
@@ -77,5 +52,11 @@ void stampa_cursori(piano_t *piano_gioco) {
                 printf("(%2d,%2d)\n", i, j);
             }
         }
+    }
+}
+
+void stampa_posizioni(coord_t *posizioni, size_t dimensione) {
+    for(size_t i=0; i<dimensione; i++) {
+        printf("(%2d,%2d)\n", posizioni[i].x, posizioni[i].y);
     }
 }

@@ -57,9 +57,9 @@ piano_t *crea_piano(unsigned int colonne) {
 
 void aggiungi_riga(piano_t *piano_gioco) {
     // Alloco la memoria necessaria per memorizzare la nuova riga
-    piano_gioco->posizione = realloc(piano_gioco->posizione, sizeof(dato_t *) * (piano_gioco->righe + 1));
+    piano_gioco->posizione = realloc(piano_gioco->posizione, sizeof(estremo_t *) * (piano_gioco->righe + 1));
     // Alloco la memoria per memorizzare gli elementi della nuova riga
-    piano_gioco->posizione[piano_gioco->righe] = calloc(piano_gioco->colonne, sizeof(dato_t));
+    piano_gioco->posizione[piano_gioco->righe] = calloc(piano_gioco->colonne, sizeof(estremo_t));
     // Incrementa il numero di righe attuali
     piano_gioco->righe++;
 }
@@ -81,19 +81,19 @@ void stampa_piano(piano_t *piano_gioco) {
             switch(piano_gioco->posizione[i][j].cardine) {
                 // Stampa correttamente l'estremo
                 case 'N': {
-                    printf(" {%d ", piano_gioco->posizione[i][j].estremo);
+                    printf(" {%d ", piano_gioco->posizione[i][j].valore);
                     break;
                 }
                 case 'S': {
-                    printf(" %d} ", piano_gioco->posizione[i][j].estremo);
+                    printf(" %d} ", piano_gioco->posizione[i][j].valore);
                     break;
                 }
                 case 'E': {
-                    printf(" [%d ", piano_gioco->posizione[i][j].estremo);
+                    printf(" [%d ", piano_gioco->posizione[i][j].valore);
                     break;
                 }
                 case 'O': {
-                    printf(" %d] ", piano_gioco->posizione[i][j].estremo);
+                    printf(" %d] ", piano_gioco->posizione[i][j].valore);
                     break;
                 }
                 // Quando non e' stato memorizzato un valore

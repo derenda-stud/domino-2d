@@ -21,14 +21,14 @@ typedef struct s_mano {
 } mano_t;
 
 // Ciascuna posizione del piano di gioco contiene un dato
-typedef struct s_dato {
-    unsigned int estremo;
+typedef struct s_estremo {
+    unsigned int valore;
     char cardine; // Nord, Sud, Est, Ovest
-} dato_t;
+} estremo_t;
 
 // Vettore dinamico con dimensione [righe * colonne]
 typedef struct s_piano {
-    dato_t **posizione;
+    estremo_t **posizione;
     unsigned int righe;
     unsigned int colonne;
 } piano_t;
