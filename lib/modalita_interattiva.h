@@ -4,6 +4,7 @@
 #include "struttura_dati.h"
 
 void stampa_turno(mano_t *mano_giocatore, piano_t *piano_gioco);
-void stampa_cursori(piano_t *piano_gioco);
+pos_t *calcola_posizioni(piano_t *piano_gioco);
+void stampa_posizioni(pos_t *posizioni);
 
 #endif

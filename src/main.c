@@ -23,12 +23,12 @@ int main() {
     piano_t *piano_gioco = crea_piano(colonne);
     
     // Inserimenti temporanei: aggiungi 3 righe al piano di gioco
-    for(int i=0; i<3; i++) {
+    for(int i=0; i<4; i++) {
         aggiungi_riga(piano_gioco);
     }
     size_t centro = colonne / 2 - 1;
     // 8 tessere = 30 colonne = posizioni [0:29]
-    /* piano_gioco->posizione[0][centro + 0].valore = 5;
+    piano_gioco->posizione[0][centro + 0].valore = 5;
     piano_gioco->posizione[0][centro + 0].cardine = 'E';
     piano_gioco->posizione[0][centro + 1].valore = 1;
     piano_gioco->posizione[0][centro + 1].cardine = 'O';
@@ -61,7 +61,12 @@ int main() {
     piano_gioco->posizione[1][centro + 0].valore = 6;
     piano_gioco->posizione[1][centro + 0].cardine = 'S';
     piano_gioco->posizione[2][centro + 0].valore = 3;
-    piano_gioco->posizione[2][centro + 0].cardine = 'N'; */
+    piano_gioco->posizione[2][centro + 0].cardine = 'N';
+    
+    piano_gioco->posizione[2][centro + 1].valore = 3;
+    piano_gioco->posizione[2][centro + 1].cardine = 'E';
+    piano_gioco->posizione[2][centro + 2].valore = 5;
+    piano_gioco->posizione[2][centro + 2].cardine = 'O';
     
     // Generazione delle tessere nella mano del giocatore
     genera_tessere(mano_giocatore);

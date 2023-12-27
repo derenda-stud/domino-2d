@@ -5,9 +5,14 @@
 
 // Posizione del cursore dove inserire le tessere
 typedef struct s_coord {
-    unsigned int x;
-    unsigned int y;
+    unsigned int riga;
+    unsigned int colonna;
 } coord_t;
+
+typedef struct s_pos {
+    coord_t *coordinate;
+    unsigned int dimensione;
+} pos_t;
 
 // Estremi contenuti dentro le tessere nella mano del giocatore
 typedef struct s_tessera {
