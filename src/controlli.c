@@ -1,24 +1,23 @@
 #include "../lib/controlli.h"
 
-bool posizione_valida(piano_t *piano_gioco, unsigned riga, unsigned int colonna, bool orientamento) {
-    if(colonna < 1 || colonna + 2 >= piano_gioco->colonne) return false;
-    if(!piano_gioco->posizione[riga][colonna - 1].cardine || !piano_gioco->posizione[riga][colonna + 2].cardine) return false;
-    // In base all'orientamento della tessera
+bool posizione_valida(piano_t *piano_gioco, unsigned int riga, unsigned int colonna, bool orientamento) {
+    // Controlla che la posizione attuale sia libera
+    if(piano_gioco->posizione[riga][colonna].cardine) return false;
+    // Per le tessere posizionate in orizzontale
     if(orientamento) {
-        // Posizioni valide in orizzontale
-        if(piano_gioco->posizione[riga][colonna].cardine || piano_gioco->posizione[riga][colonna + 1].cardine) return false;
+        // Controlla che la posizione adiacente sia libera
+        if(piano_gioco->posizione[riga][colonna + 1].cardine) return false;
+    // Altrimenti per quelle posizionate in verticale
     } else {
-        // Posizioni valide in verticale
-        if(piano_gioco->posizione[riga][colonna].cardine || piano_gioco->posizione[riga + 1][colonna].cardine) return false;
+        // Controlla di rientrare nella riga e che la posizione sottostante sia libera
+        if(riga + 1 >= piano_gioco->righe || piano_gioco->posizione[riga + 1][colonna].cardine) return false;
     }
-    // Dopo aver effettuato tutti i controlli, la posizione indicata e' valida
-    return true;
-    /*             x-1    x      x+1   x+2
-                    attuale
-    Orizzontale -> ... [vuoto | vuoto] ...
-y   Verticale   -> ... [vuoto] ...         in entrambi i casi devo avere almeno un collegamento
-y+1                    [vuoto]
-    */
+    // Controlla che rientri nel limite sinistro e che abbia un estremo collegato
+    if(colonna > 0 && piano_gioco->posizione[riga][colonna - 1].cardine) return true;
+    // Controlla che rientri nel limite destro e che abbia un estremo collegato
+    if(colonna < piano_gioco->colonne - (orientamento + 1) && piano_gioco->posizione[riga][colonna + orientamento + 1].cardine) return true;
+    // Per tutti i casi rimanenti la posizione non risulta valida
+    return false;
 }
 
 bool mosse_disponibili(piano_t *piano_gioco, mano_t *mano_giocatore, pos_t *posizioni) {

@@ -32,6 +32,10 @@ void stampa_turno(mano_t *mano_giocatore, piano_t *piano_gioco) {
     
     pos_t *posizioni = calcola_posizioni(piano_gioco);
     stampa_posizioni(posizioni);
+    // Libera la memoria occupata
+    free(posizioni->coordinate);
+    posizioni->coordinate = NULL;
+    free(posizioni);
     //mosse_disponibili(mano_giocatore, piano_gioco, posizioni);
     
     // posizione successiva e precedente
@@ -66,9 +70,9 @@ pos_t *calcola_posizioni(piano_t *piano_gioco) {
     // Per ciascuna riga
     for(size_t i=0; i<piano_gioco->righe; i++) {
         // Fino alla penultima colonna (attenzione al controllo)
-        for(size_t j=0; j<piano_gioco->colonne - 1; j++) {
+        for(size_t j=0; j<piano_gioco->colonne - 2; j++) {
             // Trova dove e' possibile posizionare una tessera
-            if(posizione_valida(piano_gioco, i, j, true)) {
+            if(posizione_valida(piano_gioco, i, j, false)) {
                 // Incrementa la dimensione dell'array di partenza
                 posizioni->dimensione++;
                 // Alloca la memoria necessaria per il nuovo elemento
@@ -91,9 +95,9 @@ void stampa_posizioni(pos_t *posizioni) {
 //   0        1       2       3       4       5       6
 // (0, 12) ( 0,19) ( 1,10) ( 1,15) ( 1,19) ( 2,13) ( 2,15)
 
-coord_t sposta_posizione(pos_t *posizioni, int nuovo_indice) {
+// coord_t sposta_posizione(pos_t *posizioni, int nuovo_indice) {
     
-}
+// }
 
 /*
 
