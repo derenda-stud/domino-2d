@@ -1,99 +1,53 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../lib/struttura_dati.h"
 
-mano_t *crea_mano(unsigned int numero_tessere) {
-    // Alloca la memoria per il puntatore iniziale
-    mano_t *mano_giocatore = malloc(sizeof(mano_t));
-    // Inizializza i parametri allocando la memoria per le tessere
-    mano_giocatore->tessere = malloc(sizeof(tessera_t) * numero_tessere);
-    // Memorizza la dimensione attuale dell'array
-    mano_giocatore->dimensione = numero_tessere;
+matrice_t *crea_matrice(size_t colonne) {
+    // Alloca la memoria necessaria al puntatore iniziale
+    matrice_t *matrice = malloc(sizeof(matrice_t));
+    // Imposta i parametri con valori inizializzati
+    matrice->posizione = NULL;
+    matrice->righe = 0;
+    matrice->colonne = colonne;
+    // Aggiungi una riga come predefinito
+    aggiungi_riga(matrice);
     // Ritorna il puntatore alla struttura dati creata
-    return mano_giocatore;
+    return matrice;
 }
 
-void genera_tessere(mano_t *mano_giocatore) {
-    // Per ciascuna posizione nella mano
-    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        // Inizializza una tessera con estremi casuali
-        mano_giocatore->tessere[i].estremo_sinistro = rand() % 6 + 1;
-        mano_giocatore->tessere[i].estremo_destro = rand() % 6 + 1;
-    }
-}
-
-void stampa_mano(mano_t *mano_giocatore) {
-    // Stampa le tessere nella mano del giocatore
-    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        printf("[%d|%d] ", mano_giocatore->tessere[i].estremo_sinistro, mano_giocatore->tessere[i].estremo_destro);
-    }
-    printf("\n");
-    // Stampa gli indici per ogni tessera
-    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        printf("  %d   ", i);
-    }
-    printf("\n");
-}
-
-void libera_mano(mano_t *mano_giocatore) {
-    // Libera la memoria occupata dalle tessere
-    free(mano_giocatore->tessere);
-    mano_giocatore->tessere = NULL;
-    // Libera la memoria del puntatore iniziale
-    free(mano_giocatore);
-}
-
-piano_t *crea_piano(unsigned int colonne) {
-    // Alloca la memoria necessaria per memorizzare il piano di gioco
-    piano_t *piano_gioco = malloc(sizeof(piano_t));
-    // Inizializza i parametri del piano di gioco
-    piano_gioco->posizione = NULL;
-    piano_gioco->righe = 0;
-    piano_gioco->colonne = colonne;
-    // Ritorna il puntatore alla nuova struttura dati
-    return piano_gioco;
-}
-
-void aggiungi_riga(piano_t *piano_gioco) {
+void aggiungi_riga(matrice_t *matrice) {
     // Alloco la memoria necessaria per memorizzare la nuova riga
-    piano_gioco->posizione = realloc(piano_gioco->posizione, sizeof(estremo_t *) * (piano_gioco->righe + 1));
+    matrice->posizione = realloc(matrice->posizione, sizeof(estremo_t *) * (matrice->righe + 1));
     // Alloco la memoria per memorizzare gli elementi della nuova riga
-    piano_gioco->posizione[piano_gioco->righe] = calloc(piano_gioco->colonne, sizeof(estremo_t));
+    matrice->posizione[matrice->righe] = calloc(matrice->colonne, sizeof(estremo_t));
     // Incrementa il numero di righe attuali
-    piano_gioco->righe++;
+    matrice->righe++;
 }
 
-void stampa_piano(piano_t *piano_gioco) {
-    // Stampa gli indici degli estremi
-    printf("  ");
-    for(size_t i=0; i<piano_gioco->colonne; i++) {
-        printf(" %2d ", i);
-    }
-    printf("\n");
-    // Per ogni riga nel piano di gioco
-    for(size_t i=0; i<piano_gioco->righe; i++) {
-        // Stampa la riga attuale
-        printf("%2d", i);
-        // Stampa gli estremi in ciascuna colonna
-        for(size_t j=0; j<piano_gioco->colonne; j++) {
+void stampa_matrice(matrice_t *matrice) {
+    // Per ogni riga della matrice
+    for(size_t i=0; i<matrice->righe; i++) {
+        // Per ogni colonna della colonna
+        for(size_t j=0; j<matrice->colonne; j++) {
             // In base al valore assunto dal cardine
-            switch(piano_gioco->posizione[i][j].cardine) {
+            switch(matrice->posizione[i][j].cardine) {
                 // Stampa correttamente l'estremo
-                case 'N': {
-                    printf(" {%d ", piano_gioco->posizione[i][j].valore);
+                case 1: {
+                    printf(" [%d ", matrice->posizione[i][j].valore);
                     break;
                 }
-                case 'S': {
-                    printf(" %d} ", piano_gioco->posizione[i][j].valore);
+                case 2: {
+                    printf(" %d] ", matrice->posizione[i][j].valore);
                     break;
                 }
-                case 'E': {
-                    printf(" [%d ", piano_gioco->posizione[i][j].valore);
+                case 3: {
+                    printf(" {%d ", matrice->posizione[i][j].valore);
                     break;
                 }
-                case 'O': {
-                    printf(" %d] ", piano_gioco->posizione[i][j].valore);
+                case 4: {
+                    printf(" %d} ", matrice->posizione[i][j].valore);
                     break;
                 }
                 // Quando non e' stato memorizzato un valore
@@ -109,15 +63,57 @@ void stampa_piano(piano_t *piano_gioco) {
     }
 }
 
-void libera_piano(piano_t *piano_gioco) {
-    // Libera tutte le righe del piano di gioco
-    for(size_t i=0; i<piano_gioco->righe; i++) {
-        free(piano_gioco->posizione[i]);
-        piano_gioco->posizione[i] = NULL;
+void libera_matrice(matrice_t *matrice) {
+    // Libera tutte le righe della matrice
+    for(size_t i=0; i<matrice->righe; i++) {
+        free(matrice->posizione[i]);
+        matrice->posizione[i] = NULL;
     }
-    // Libera la memoria del puntatore iniziale
-    free(piano_gioco->posizione);
-    piano_gioco->posizione = NULL;
-    // Libera la memoria della struttura dati del piano
-    free(piano_gioco);
+    // Libera la memoria del puntatore alla prima posizione
+    free(matrice->posizione);
+    matrice->posizione = NULL;
+    // Libera la memoria occupata dal puntatore iniziale
+    free(matrice);
 }
+
+void genera_tessere(matrice_t *mano_giocatore) {
+    // Per ciascun estremo della mano del giocatore
+    for(size_t j=0; j<mano_giocatore->colonne; j++) {
+        // Genera casualmente i suoi valori contenuti
+        mano_giocatore->posizione[0][j].valore = rand() % 6 + 1;
+        // Collega i due estremi memorizzando i loro cardini
+        mano_giocatore->posizione[0][j].cardine = 1 + (j % 2);
+    }
+}
+
+void inserisci_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco, int indice, coord_t coordinata, bool orientamento) {
+    // Memorizza l'estremo sinistro della mano del giocatore nel piano di gioco
+    piano_gioco->posizione[coordinata.riga][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2];
+    // In base all'orientamento, memorizza l'estremo destro nella posizione adiacente/sottostante
+    piano_gioco->posizione[coordinata.riga + orientamento][coordinata.colonna + !orientamento] = mano_giocatore->posizione[0][indice * 2 + 1];
+    // Se posizionata in verticale cambia i cardini perche' corrispondano agli orientamenti 3 e 4
+    piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine += (orientamento * 2);
+    piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine += (orientamento * 2);
+    // Rimuovi i due estremi posizionati dalla mano del giocatore
+    // sposta_estremi(mano_giocatore, indice);
+}
+
+/* Inserimento in orizzontale:
+        - Memorizza la posizione attuale ed adiacente
+        - Mantieni gli stessi cardini
+    */
+   /*
+    if(!orientamento) {
+        piano_gioco->posizione[coordinata.riga][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2];
+        piano_gioco->posizione[coordinata.riga][coordinata.colonna + 1] = mano_giocatore->posizione[0][indice * 2 + 1];
+    } else {  
+        piano_gioco->posizione[coordinata.riga][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2];
+        piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2 + 1];
+        piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine += 2;
+        piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine += 2;
+    }
+    */
+    /* Inserimento in verticale:
+        - Memorizza la posizione attuale e sottostante
+        - Cambia il valore dei cardini (incrementalo di 2)
+    */

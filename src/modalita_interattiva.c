@@ -2,27 +2,16 @@
 #include <stdbool.h>
 
 #include "../lib/modalita_interattiva.h"
-#include "../lib/controlli.h"
 
-/* In base allo stato del piano di gioco:
-    - se e' vuoto:
-        * posiziona la prima tessera al centro 
-    - se contiene estremi:
-        * menu di inserimento
-        * 
-*/
-
-/*
-
-*/
-
-void stampa_turno(mano_t *mano_giocatore, piano_t *piano_gioco) {
+void stampa_turno(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
     // Continua finche' rimangono tessere in mano e sono rimaste mosse disponibili
-    while(mosse_disponibili(mano_giocatore, piano_gioco)) {
+    //while(mosse_disponibili(mano_giocatore, piano_gioco)) {
         // Stampa il piano di gioco nello stato corrente
-        stampa_piano(piano_gioco);
+        printf("Piano di gioco:\n");
+        stampa_matrice(piano_gioco);
         // Stampa le tessere presenti nella mano del giocatore
-        stampa_mano(mano_giocatore);
+        printf("Mano del giocatore:\n");
+        stampa_matrice(mano_giocatore);
         // Inserisci la prossima mossa da effettuare
         printf(" - Premi 1 per posizionare una tessera\n");
         printf(" - Premi 2 per ruotare una tessera\n");
@@ -34,21 +23,14 @@ void stampa_turno(mano_t *mano_giocatore, piano_t *piano_gioco) {
         printf(" - Premi 2 per scorrere alla posizione successiva\n");
         printf(" - Premi 0 per confermare la posizione selezionata\n");
         
-        break;
-    }
-    
-    
-    
-    pos_t *posizioni = calcola_posizioni(piano_gioco);
-    stampa_posizioni(posizioni);
+    /*
+    coord_t *coordinate = calcola_coordinate(piano_gioco);
+    //stampa_coordinate(coordinate);
     // Libera la memoria occupata
-    free(posizioni->coordinate);
-    posizioni->coordinate = NULL;
-    free(posizioni);
-    //mosse_disponibili(mano_giocatore, piano_gioco, posizioni);
+    free(coordinate);
     
     // posizione successiva e precedente
-/*     posizioni[i].riga, posizioni[i].colonna;
+     posizioni[i].riga, posizioni[i].colonna;
     // orizzontale sx
     piano_gioco->posizione[riga][colonna + 0].valore/.cardine;
     piano_gioco->posizione[riga][colonna - 1].valore/.cardine;
@@ -73,9 +55,10 @@ if(nuovo_indice < 0 || nuovo_indice > dimensione - 1) return cursore[attuale];
 else return cursore[attuale + nuovo_indice];
 
 */
-
-pos_t *calcola_posizioni(piano_t *piano_gioco) {
-    pos_t *posizioni = calloc(1, sizeof(pos_t));
+/*
+coord_t *calcola_coordinate(matrice_t *piano_gioco) {
+    
+    coord_t *coordinate = calloc(..., sizeof(coord_t));
     // Per ciascuna riga
     for(size_t i=0; i<piano_gioco->righe; i++) {
         // Fino alla penultima colonna (attenzione al controllo)
@@ -93,13 +76,15 @@ pos_t *calcola_posizioni(piano_t *piano_gioco) {
     }
     // Ritorna il nuovo vettore creato
     return posizioni;
+    
 }
 
-void stampa_posizioni(pos_t *posizioni) {
-    for(size_t i=0; i<posizioni->dimensione; i++) {
-        printf("(%2d,%2d)\n", posizioni->coordinate[i].riga, posizioni->coordinate[i].colonna);
+void stampa_coordinate(coord_t *coordinate, size_t dimensione) {
+    for(size_t i=0; i<coordinate->dimensione; i++) {
+        printf("(%2d,%2d)\n", coordinate->coordinate[i].riga, posizioni->coordinate[i].colonna);
     }
 }
+*/
 
 //   0        1       2       3       4       5       6
 // (0, 12) ( 0,19) ( 1,10) ( 1,15) ( 1,19) ( 2,13) ( 2,15)

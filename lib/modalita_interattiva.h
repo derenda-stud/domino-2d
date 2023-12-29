@@ -3,8 +3,8 @@
 
 #include "struttura_dati.h"
 
-void stampa_turno(mano_t *mano_giocatore, piano_t *piano_gioco);
-pos_t *calcola_posizioni(piano_t *piano_gioco);
-void stampa_posizioni(pos_t *posizioni);
+void stampa_turno(matrice_t *mano_giocatore, matrice_t *piano_gioco);
+coord_t *calcola_coordinate(matrice_t *piano_gioco);
+void stampa_coordinate(coord_t *coordinate);
 
 #endif

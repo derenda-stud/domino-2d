@@ -1,6 +1,6 @@
 #include "../lib/controlli.h"
 
-bool posizione_valida(piano_t *piano_gioco, unsigned int riga, unsigned int colonna, bool orientamento) {
+bool posizione_valida(matrice_t *piano_gioco, unsigned int riga, unsigned int colonna, bool orientamento) {
     // Controlla che la posizione attuale sia libera
     if(piano_gioco->posizione[riga][colonna].cardine) return false;
     // Per le tessere posizionate in orizzontale
@@ -20,7 +20,7 @@ bool posizione_valida(piano_t *piano_gioco, unsigned int riga, unsigned int colo
     return false;
 }
 
-bool mosse_disponibili(mano_t *mano_giocatore, piano_t *piano_gioco) {
+bool mosse_disponibili(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
     return true;
     /*
     // Termina la partita dopo aver esaurite le tessere
@@ -38,14 +38,4 @@ bool mosse_disponibili(mano_t *mano_giocatore, piano_t *piano_gioco) {
     // Non ho trovato nessuna mossa legale
     return false;
     */
-}
-
-bool mossa_legale(piano_t *piano_gioco, tessera_t da_confrontare, coord_t coordinata) {
-    // Quando il piano di gioco e' vuoto non sono necessari controlli
-    if(piano_gioco == NULL) return true;
-    return false;
-}
-
-int estremi_corrispondono() {
-    return 0;
 }
