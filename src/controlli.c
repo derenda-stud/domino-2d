@@ -20,7 +20,9 @@ bool posizione_valida(piano_t *piano_gioco, unsigned int riga, unsigned int colo
     return false;
 }
 
-bool mosse_disponibili(piano_t *piano_gioco, mano_t *mano_giocatore, pos_t *posizioni) {
+bool mosse_disponibili(mano_t *mano_giocatore, piano_t *piano_gioco) {
+    return true;
+    /*
     // Termina la partita dopo aver esaurite le tessere
     if(mano_giocatore->dimensione == 0) return false;
     // Altrimenti per ogni tessera presente nella mano del giocatore
@@ -35,6 +37,7 @@ bool mosse_disponibili(piano_t *piano_gioco, mano_t *mano_giocatore, pos_t *posi
     }
     // Non ho trovato nessuna mossa legale
     return false;
+    */
 }
 
 bool mossa_legale(piano_t *piano_gioco, tessera_t da_confrontare, coord_t coordinata) {

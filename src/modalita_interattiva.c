@@ -17,16 +17,25 @@
 */
 
 void stampa_turno(mano_t *mano_giocatore, piano_t *piano_gioco) {
-    stampa_piano(piano_gioco);
-    stampa_mano(mano_giocatore);
     // Continua finche' rimangono tessere in mano e sono rimaste mosse disponibili
-    //while(mosse_disponibili(mano_giocatore, piano_gioco)) {
+    while(mosse_disponibili(mano_giocatore, piano_gioco)) {
         // Stampa il piano di gioco nello stato corrente
-        
+        stampa_piano(piano_gioco);
         // Stampa le tessere presenti nella mano del giocatore
-        
+        stampa_mano(mano_giocatore);
         // Inserisci la prossima mossa da effettuare
-    //}
+        printf(" - Premi 1 per posizionare una tessera\n");
+        printf(" - Premi 2 per ruotare una tessera\n");
+        printf("Inserisci l'indice della tessera da posizionare/ruotare:\n");
+        printf("Come vuoi posizionare la tessera? (1 in orizzontale, 0 in verticale):\n");
+        
+        printf("Seleziona dove posizionare la tessera:\n");
+        printf(" - Premi 1 per scorrere alla posizione precedente\n");
+        printf(" - Premi 2 per scorrere alla posizione successiva\n");
+        printf(" - Premi 0 per confermare la posizione selezionata\n");
+        
+        break;
+    }
     
     
     
