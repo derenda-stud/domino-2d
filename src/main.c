@@ -6,33 +6,27 @@
 
 #include "../lib/modalita_interattiva.h"
 #include "../lib/struttura_dati.h"
+#include "../lib/controlli.h"
 
 /* Progetto Domino Lineare di Bertoncello Nicolas, Derevytskyy Alessandro */
-#include <stdbool.h>
 
 int main() {
     // Inizializza la generazione dei numeri casuali
     srand(time(NULL));
-    // Dichiarazione del numero di tessere richieste
-    int numero_tessere = 3;
-    // Inizializzazione colonne con il numero di tessere indicato
+    // Richiesta da parte dell'utente per il numero di tessere
+    unsigned int numero_tessere = inserisci_numero_tessere();
+    // Inizializzazione delle colonne con il numero di tessere indicato
     unsigned int colonne = 4 * (numero_tessere - 1) + 2;
-    printf("Numero di colonne: %d\n", colonne);
     // La mano del giocatore e' una matrice lineare
     matrice_t *mano_giocatore = crea_matrice(numero_tessere * 2);
-    // Il piano di gioco e' una matrice graduale
+    // Il piano di gioco e' una matrice con righe graduali
     matrice_t *piano_gioco = crea_matrice(colonne);
-    aggiungi_riga(piano_gioco);
-    
     // Generazione delle tessere nella mano del giocatore
     genera_tessere(mano_giocatore);
-    
-    // Funzione per il proseguimento del gioco
-    stampa_turno(mano_giocatore, piano_gioco);
-    
+    // Inserimenti temporanei per verificarne le funzionalita'
     inserimento_orizzontale(piano_gioco, mano_giocatore->posizione[0] + (0 * 2), (coord_t) {0, 0});
     inserimento_verticale(piano_gioco, mano_giocatore->posizione[0] + (1 * 2), (coord_t) {0, 2});
-    
+    // Funzione per il proseguimento del gioco
     stampa_turno(mano_giocatore, piano_gioco);
     
     /*

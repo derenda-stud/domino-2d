@@ -43,13 +43,13 @@ void stampa_estremo(estremo_t estremo) {
     // In base al valore assunto dal cardine
     switch(estremo.cardine) {
         // Stampa correttamente l'estremo
-        case 1: printf(" [%d ", estremo.valore);
+        case 1: printf(" [%d ", estremo.valore); // >
                 break;
-        case 2: printf(" %d] ", estremo.valore);
+        case 2: printf(" %d] ", estremo.valore); // <
                 break;
-        case 3: printf(" {%d ", estremo.valore);
+        case 3: printf(" {%d ", estremo.valore); // v
                 break;
-        case 4: printf(" %d} ", estremo.valore);
+        case 4: printf(" %d} ", estremo.valore); // ^
                 break;
         // Quando non e' stato memorizzato un valore stampa uno spazio vuoto
         default: printf(" -- ");
@@ -79,7 +79,7 @@ void genera_tessere(matrice_t *mano_giocatore) {
     }
 }
 
-coord_t *calcola_coordinate(matrice_t *piano_gioco, size_t *posizioni) {
+coord_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, size_t *posizioni, bool orizzontale) {
     // Inizializza il vettore contenente le coordinate
     coord_t *coordinate = NULL;
     // Per ciascuna riga
@@ -87,7 +87,7 @@ coord_t *calcola_coordinate(matrice_t *piano_gioco, size_t *posizioni) {
         // Fino alla punultima colonna (attenzione al controllo)
         for(size_t j=0; j<piano_gioco->colonne - 2; j++) {
             // Trova dove e' possibile posizionare una tessera
-            if(posizione_valida(piano_gioco, i, j, true)) {
+            if(posizione_valida(piano_gioco, da_confrontare, (coord_t) {i, j}, orizzontale)) {
                 // Incrementa la dimensione dell'array di partenza
                 (*posizioni)++;
                 // Alloca la memoria necessaria per il nuovo elemento
@@ -119,7 +119,7 @@ void inserimento_orizzontale(matrice_t *piano_gioco, estremo_t *estremo_sinistro
 
 void inserimento_verticale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t coordinata) {
     // Controlla se sia necessario aggiungere una nuova riga
-    if(piano_gioco->righe <= coordinata.riga) aggiungi_riga(piano_gioco);
+    if(coordinata.riga + 1 >= piano_gioco->righe) aggiungi_riga(piano_gioco);
     // Memorizza l'estremo sinistro nella posizione corrente
     piano_gioco->posizione[coordinata.riga][coordinata.colonna] = *estremo_sinistro;
     // Memorizza l'estremo destro nella posizione sottostante

@@ -5,8 +5,12 @@
 
 #include "struttura_dati.h"
 
+// Chiedi all'utente il numero di tessere con cui vuole giocare
+unsigned int inserisci_numero_tessere();
+// Chiedi all'utente un numero compreso tra un estremo minimo e massimo
+unsigned int inserisci_numero_compreso(char *messaggio, unsigned int minimo, unsigned int massimo);
 // Valuta se una posizione sul piano di gioco e' valida per l'inserimento di una tessera
-bool posizione_valida(matrice_t *piano_gioco, unsigned int riga, unsigned int colonna, bool orizzontale);
+bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t coordinata, bool orizzontale);
 // Controlla se sia possibile aggiungere una tessera al piano di gioco
 bool mosse_disponibili(matrice_t *mano_giocatore, matrice_t *piano_gioco, coord_t *coordinate, size_t posizioni);
 // Controlla che la tessera combaci nella posizione indicata
