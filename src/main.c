@@ -30,9 +30,8 @@ int main() {
     // Funzione per il proseguimento del gioco
     stampa_turno(mano_giocatore, piano_gioco);
     
-    coord_t prima = {0, 0}, seconda = {0, 2};
-    inserisci_tessera(mano_giocatore, piano_gioco, 0, prima, true);
-    inserisci_tessera(mano_giocatore, piano_gioco, 1, seconda, false);
+    inserimento_orizzontale(piano_gioco, mano_giocatore->posizione[0] + (0 * 2), (coord_t) {0, 0});
+    inserimento_verticale(piano_gioco, mano_giocatore->posizione[0] + (1 * 2), (coord_t) {0, 2});
     
     stampa_turno(mano_giocatore, piano_gioco);
     
@@ -72,6 +71,7 @@ int main() {
     piano_gioco->posizione[2][centro + 2].valore = 5;
     piano_gioco->posizione[2][centro + 2].cardine = 'O';
     */
+    
     // Libera la memoria occupata
     libera_matrice(mano_giocatore);
     libera_matrice(piano_gioco);

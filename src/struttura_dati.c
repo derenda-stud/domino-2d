@@ -32,35 +32,27 @@ void stampa_matrice(matrice_t *matrice) {
     for(size_t i=0; i<matrice->righe; i++) {
         // Per ogni colonna della colonna
         for(size_t j=0; j<matrice->colonne; j++) {
-            // In base al valore assunto dal cardine
-            switch(matrice->posizione[i][j].cardine) {
-                // Stampa correttamente l'estremo
-                case 1: {
-                    printf(" [%d ", matrice->posizione[i][j].valore);
-                    break;
-                }
-                case 2: {
-                    printf(" %d] ", matrice->posizione[i][j].valore);
-                    break;
-                }
-                case 3: {
-                    printf(" {%d ", matrice->posizione[i][j].valore);
-                    break;
-                }
-                case 4: {
-                    printf(" %d} ", matrice->posizione[i][j].valore);
-                    break;
-                }
-                // Quando non e' stato memorizzato un valore
-                default: {
-                    // Stampa uno spazio vuoto
-                    printf(" -- ");
-                    break;
-                }
-            }
+            stampa_estremo(matrice->posizione[i][j]);
         }
         // Stampa la riga successiva
         printf("\n");
+    }
+}
+
+void stampa_estremo(estremo_t estremo) {
+    // In base al valore assunto dal cardine
+    switch(estremo.cardine) {
+        // Stampa correttamente l'estremo
+        case 1: printf(" [%d ", estremo.valore);
+                break;
+        case 2: printf(" %d] ", estremo.valore);
+                break;
+        case 3: printf(" {%d ", estremo.valore);
+                break;
+        case 4: printf(" %d} ", estremo.valore);
+                break;
+        // Quando non e' stato memorizzato un valore stampa uno spazio vuoto
+        default: printf(" -- ");
     }
 }
 
@@ -115,34 +107,28 @@ void stampa_coordinate(coord_t *coordinate, size_t posizioni) {
     }
 }
 
-void inserisci_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco, int indice, coord_t coordinata, bool orizzontale) {
-    // Memorizza l'estremo sinistro della mano del giocatore nel piano di gioco
-    piano_gioco->posizione[coordinata.riga][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2];
-    // In base all'orientamento, memorizza l'estremo destro nella posizione adiacente/sottostante
-    piano_gioco->posizione[coordinata.riga + !orizzontale][coordinata.colonna + orizzontale] = mano_giocatore->posizione[0][indice * 2 + 1];
-    // Se posizionata in verticale cambia i cardini perche' corrispondano agli orientamenti 3 e 4
-    piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine += (!orizzontale * 2);
-    piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine += (!orizzontale * 2);
-    // Rimuovi i due estremi posizionati dalla mano del giocatore
-    // sposta_estremi(mano_giocatore, indice);
+void inserimento_orizzontale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t coordinata) {
+    // Memorizza l'estremo sinistro nella posizione corrente
+    piano_gioco->posizione[coordinata.riga][coordinata.colonna] = *estremo_sinistro;
+    // Memorizza l'estremo destro nella posizione adiacente
+    piano_gioco->posizione[coordinata.riga][coordinata.colonna + 1] = *(estremo_sinistro + 1);
 }
 
-/* Inserimento in orizzontale:
-        - Memorizza la posizione attuale ed adiacente
-        - Mantieni gli stessi cardini
-    */
-   /*
-    if(!orientamento) {
-        piano_gioco->posizione[coordinata.riga][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2];
-        piano_gioco->posizione[coordinata.riga][coordinata.colonna + 1] = mano_giocatore->posizione[0][indice * 2 + 1];
-    } else {  
-        piano_gioco->posizione[coordinata.riga][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2];
-        piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2 + 1];
-        piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine += 2;
-        piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine += 2;
-    }
-    */
-    /* Inserimento in verticale:
-        - Memorizza la posizione attuale e sottostante
-        - Cambia il valore dei cardini (incrementalo di 2)
-    */
+// Rimuovi i due estremi posizionati dalla mano del giocatore
+// sposta_estremi(mano_giocatore, indice);
+
+void inserimento_verticale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t coordinata) {
+    // Controlla se sia necessario aggiungere una nuova riga
+    if(piano_gioco->righe <= coordinata.riga) aggiungi_riga(piano_gioco);
+    // Memorizza l'estremo sinistro nella posizione corrente
+    piano_gioco->posizione[coordinata.riga][coordinata.colonna] = *estremo_sinistro;
+    // Memorizza l'estremo destro nella posizione sottostante
+    piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna] = *(estremo_sinistro + 1);
+    // Incrementa l'orientamento dei cardini
+    incrementa_cardini(piano_gioco, coordinata);
+}
+
+void incrementa_cardini(matrice_t *piano_gioco, coord_t coordinata) {
+    piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine += 2;
+    piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine += 2;
+}

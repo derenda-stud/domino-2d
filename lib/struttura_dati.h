@@ -29,6 +29,8 @@ matrice_t *crea_matrice(size_t colonne);
 void aggiungi_riga(matrice_t *matrice);
 // Stampa gli estremi presenti in ogni riga della matrice
 void stampa_matrice(matrice_t *matrice);
+// Stampa il valore di un estremo in base al cardine
+void stampa_estremo(estremo_t estremo);
 // Libera la memoria occupata dalla matrice
 void libera_matrice(matrice_t *matrice);
 // Genera gli estremi delle tessera nella mano del giocatore
@@ -37,7 +39,11 @@ void genera_tessere(matrice_t *mano_giocatore);
 coord_t *calcola_coordinate(matrice_t *piano_gioco, size_t *posizioni);
 // Stampa riga e colonna di ciascuna coordinata
 void stampa_coordinate(coord_t *coordinate, size_t posizioni);
-// Inserisci una tessera presente nella mano del giocatore sul piano di gioco
-void inserisci_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco, int indice, coord_t coordinata, bool orizzontale);
+// Inserisci in orizzontale una tessera presente nella mano del giocatore sul piano di gioco
+void inserimento_orizzontale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t coordinata);
+// Inserisci in verticale una tessera presente nella mano del giocatore sul piano di gioco
+void inserimento_verticale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t coordinata);
+// Incrementa il valore dei cardini perche' corrispondano agli estremi posizionati in verticale
+void incrementa_cardini(matrice_t *piano_gioco, coord_t coordinata);
 
 #endif
