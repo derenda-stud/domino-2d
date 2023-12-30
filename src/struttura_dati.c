@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "../lib/struttura_dati.h"
+#include "../lib/controlli.h"
 
 matrice_t *crea_matrice(size_t colonne) {
     // Alloca la memoria necessaria al puntatore iniziale
@@ -86,14 +87,42 @@ void genera_tessere(matrice_t *mano_giocatore) {
     }
 }
 
-void inserisci_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco, int indice, coord_t coordinata, bool orientamento) {
+coord_t *calcola_coordinate(matrice_t *piano_gioco, size_t *posizioni) {
+    // Inizializza il vettore contenente le coordinate
+    coord_t *coordinate = NULL;
+    // Per ciascuna riga
+    for(size_t i=0; i<piano_gioco->righe; i++) {
+        // Fino alla punultima colonna (attenzione al controllo)
+        for(size_t j=0; j<piano_gioco->colonne - 2; j++) {
+            // Trova dove e' possibile posizionare una tessera
+            if(posizione_valida(piano_gioco, i, j, true)) {
+                // Incrementa la dimensione dell'array di partenza
+                (*posizioni)++;
+                // Alloca la memoria necessaria per il nuovo elemento
+                coordinate = realloc(coordinate, sizeof(coord_t) * (*posizioni));
+                // Aggiungi l'elemento all'array
+                coordinate[*posizioni - 1] = (coord_t) {i, j};
+            }
+        }
+    }
+    // Ritorna il nuovo vettore creato
+    return coordinate;
+}
+
+void stampa_coordinate(coord_t *coordinate, size_t posizioni) {
+    for(size_t i=0; i<posizioni; i++) {
+        printf("(%2d,%2d)\n", coordinate[i].riga, coordinate[i].colonna);
+    }
+}
+
+void inserisci_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco, int indice, coord_t coordinata, bool orizzontale) {
     // Memorizza l'estremo sinistro della mano del giocatore nel piano di gioco
     piano_gioco->posizione[coordinata.riga][coordinata.colonna] = mano_giocatore->posizione[0][indice * 2];
     // In base all'orientamento, memorizza l'estremo destro nella posizione adiacente/sottostante
-    piano_gioco->posizione[coordinata.riga + orientamento][coordinata.colonna + !orientamento] = mano_giocatore->posizione[0][indice * 2 + 1];
+    piano_gioco->posizione[coordinata.riga + !orizzontale][coordinata.colonna + orizzontale] = mano_giocatore->posizione[0][indice * 2 + 1];
     // Se posizionata in verticale cambia i cardini perche' corrispondano agli orientamenti 3 e 4
-    piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine += (orientamento * 2);
-    piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine += (orientamento * 2);
+    piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine += (!orizzontale * 2);
+    piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine += (!orizzontale * 2);
     // Rimuovi i due estremi posizionati dalla mano del giocatore
     // sposta_estremi(mano_giocatore, indice);
 }

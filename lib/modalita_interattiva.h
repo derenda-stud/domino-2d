@@ -3,8 +3,7 @@
 
 #include "struttura_dati.h"
 
+// Stampa le operazioni eseguite durante il turno del giocatore
 void stampa_turno(matrice_t *mano_giocatore, matrice_t *piano_gioco);
-coord_t *calcola_coordinate(matrice_t *piano_gioco);
-void stampa_coordinate(coord_t *coordinate);
 
 #endif

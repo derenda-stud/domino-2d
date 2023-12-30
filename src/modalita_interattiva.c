@@ -2,10 +2,14 @@
 #include <stdbool.h>
 
 #include "../lib/modalita_interattiva.h"
+#include "../lib/controlli.h"
 
 void stampa_turno(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
+    // Crea un nuovo vettore contenete le coordinate delle posizioni valide
+    size_t posizioni = 0;
+    coord_t *coordinate = calcola_coordinate(piano_gioco, &posizioni);
     // Continua finche' rimangono tessere in mano e sono rimaste mosse disponibili
-    //while(mosse_disponibili(mano_giocatore, piano_gioco)) {
+    while(mosse_disponibili(mano_giocatore, piano_gioco, coordinate, posizioni)) {
         // Stampa il piano di gioco nello stato corrente
         printf("Piano di gioco:\n");
         stampa_matrice(piano_gioco);
@@ -23,26 +27,14 @@ void stampa_turno(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
         printf(" - Premi 2 per scorrere alla posizione successiva\n");
         printf(" - Premi 0 per confermare la posizione selezionata\n");
         
-    /*
-    coord_t *coordinate = calcola_coordinate(piano_gioco);
-    //stampa_coordinate(coordinate);
+        break;
+    }
+    // Stampa a schermo le nuove coordinate ottenute
+    stampa_coordinate(coordinate, posizioni);
     // Libera la memoria occupata
     free(coordinate);
-    
-    // posizione successiva e precedente
-     posizioni[i].riga, posizioni[i].colonna;
-    // orizzontale sx
-    piano_gioco->posizione[riga][colonna + 0].valore/.cardine;
-    piano_gioco->posizione[riga][colonna - 1].valore/.cardine;
-    // orizzontale dx
-    piano_gioco->posizione[riga][colonna + 0].valore/.cardine;
-    piano_gioco->posizione[riga][colonna + 1].valore/.cardine;
-    // verticale
-    piano_gioco->posizione[riga + 0][colonna].valore/.cardine;
-    piano_gioco->posizione[riga + 1][colonna].valore/.cardine; */
-    
-    // stampa_piano(piano_gioco);
 }
+
 /*
 if(ha_premuto 'A') -> -1
 if(ha_premuto 'D') -> +1
@@ -55,36 +47,7 @@ if(nuovo_indice < 0 || nuovo_indice > dimensione - 1) return cursore[attuale];
 else return cursore[attuale + nuovo_indice];
 
 */
-/*
-coord_t *calcola_coordinate(matrice_t *piano_gioco) {
-    
-    coord_t *coordinate = calloc(..., sizeof(coord_t));
-    // Per ciascuna riga
-    for(size_t i=0; i<piano_gioco->righe; i++) {
-        // Fino alla penultima colonna (attenzione al controllo)
-        for(size_t j=0; j<piano_gioco->colonne - 2; j++) {
-            // Trova dove e' possibile posizionare una tessera
-            if(posizione_valida(piano_gioco, i, j, false)) {
-                // Incrementa la dimensione dell'array di partenza
-                posizioni->dimensione++;
-                // Alloca la memoria necessaria per il nuovo elemento
-                posizioni->coordinate = realloc(posizioni->coordinate, sizeof(coord_t) * (posizioni->dimensione));
-                // Aggiungi l'elemento all'array
-                posizioni->coordinate[posizioni->dimensione - 1] = (coord_t) {i, j};
-            }
-        }
-    }
-    // Ritorna il nuovo vettore creato
-    return posizioni;
-    
-}
 
-void stampa_coordinate(coord_t *coordinate, size_t dimensione) {
-    for(size_t i=0; i<coordinate->dimensione; i++) {
-        printf("(%2d,%2d)\n", coordinate->coordinate[i].riga, posizioni->coordinate[i].colonna);
-    }
-}
-*/
 
 //   0        1       2       3       4       5       6
 // (0, 12) ( 0,19) ( 1,10) ( 1,15) ( 1,19) ( 2,13) ( 2,15)

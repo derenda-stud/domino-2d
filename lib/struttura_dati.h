@@ -33,7 +33,11 @@ void stampa_matrice(matrice_t *matrice);
 void libera_matrice(matrice_t *matrice);
 // Genera gli estremi delle tessera nella mano del giocatore
 void genera_tessere(matrice_t *mano_giocatore);
+// Ritorna un vettore contenente tutte le coordinate delle posizioni valide
+coord_t *calcola_coordinate(matrice_t *piano_gioco, size_t *posizioni);
+// Stampa riga e colonna di ciascuna coordinata
+void stampa_coordinate(coord_t *coordinate, size_t posizioni);
 // Inserisci una tessera presente nella mano del giocatore sul piano di gioco
-void inserisci_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco, int indice, coord_t coordinata, bool orientamento);
+void inserisci_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco, int indice, coord_t coordinata, bool orizzontale);
 
 #endif

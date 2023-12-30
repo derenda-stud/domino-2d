@@ -31,10 +31,10 @@ int main() {
     stampa_turno(mano_giocatore, piano_gioco);
     
     coord_t prima = {0, 0}, seconda = {0, 2};
-    inserisci_tessera(mano_giocatore, piano_gioco, 0, prima, false);
-    inserisci_tessera(mano_giocatore, piano_gioco, 1, seconda, true);
+    inserisci_tessera(mano_giocatore, piano_gioco, 0, prima, true);
+    inserisci_tessera(mano_giocatore, piano_gioco, 1, seconda, false);
     
-    stampa_matrice(piano_gioco);
+    stampa_turno(mano_giocatore, piano_gioco);
     
     /*
     piano_gioco->posizione[0][centro + 2].valore = 1;
