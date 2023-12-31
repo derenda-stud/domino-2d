@@ -24,47 +24,29 @@ int main() {
     // Generazione delle tessere nella mano del giocatore
     genera_tessere(mano_giocatore);
     // Inserimenti temporanei per verificarne le funzionalita'
-    inserimento_orizzontale(piano_gioco, mano_giocatore->posizione[0] + (0 * 2), (coord_t) {0, 0});
-    inserimento_verticale(piano_gioco, mano_giocatore->posizione[0] + (1 * 2), (coord_t) {0, 2});
+    estremo_t estremi_temp[] = {
+        // [5|1]        [1|6]         {5          [4|6]         {6          [3|2]         {6
+        //                            6}                        2}                        3}
+        {5,1},{1,2}, {1,1},{6,2}, {5,1},{6,2}, {4,1},{6,2}, {6,1},{2,2}, {3,1},{2,2}, {6,1},{3,2}
+    };
+    unsigned int centro = colonne / 2 - 1;
+    coord_t coordinate_temp[] = {
+        {0,centro+0},{0,centro+2},{0,centro-1},{1,centro-3},{0,centro+4},{1,centro+2},{1,centro+0}
+    };
+    bool orizzontali[] = {
+        true,            true,       false,        true,         false,        true,       false
+    };
+    for(int i=0; i<7; i++) {
+        if(orizzontali[i]) {
+            inserimento_orizzontale(piano_gioco, estremi_temp + (i * 2), coordinate_temp[i]);
+        }
+        else {
+            inserimento_verticale(piano_gioco, estremi_temp + (i * 2), coordinate_temp[i]);
+        }
+    }
+    //inserimento_verticale(piano_gioco, mano_giocatore->posizione[0] + (1 * 2), (coord_t) {0, 2});
     // Funzione per il proseguimento del gioco
     stampa_turno(mano_giocatore, piano_gioco);
-    
-    /*
-    piano_gioco->posizione[0][centro + 2].valore = 1;
-    piano_gioco->posizione[0][centro + 2].cardine = 'E';
-    piano_gioco->posizione[0][centro + 3].valore = 6;
-    piano_gioco->posizione[0][centro + 3].cardine = 'O';
-
-    piano_gioco->posizione[0][centro + 4].valore = 6;
-    piano_gioco->posizione[0][centro + 4].cardine = 'S';
-    piano_gioco->posizione[1][centro + 4].valore = 2;
-    piano_gioco->posizione[1][centro + 4].cardine = 'N';
-
-    piano_gioco->posizione[1][centro + 2].valore = 3;
-    piano_gioco->posizione[1][centro + 2].cardine = 'E';
-    piano_gioco->posizione[1][centro + 3].valore = 2;
-    piano_gioco->posizione[1][centro + 3].cardine = 'O';
-
-    piano_gioco->posizione[0][centro - 1].valore = 5;
-    piano_gioco->posizione[0][centro - 1].cardine = 'S';
-    piano_gioco->posizione[1][centro - 1].valore = 6;
-    piano_gioco->posizione[1][centro - 1].cardine = 'N';
-
-    piano_gioco->posizione[1][centro - 3].valore = 4;
-    piano_gioco->posizione[1][centro - 3].cardine = 'E';
-    piano_gioco->posizione[1][centro - 2].valore = 6;
-    piano_gioco->posizione[1][centro - 2].cardine = 'O';
-
-    piano_gioco->posizione[1][centro + 0].valore = 6;
-    piano_gioco->posizione[1][centro + 0].cardine = 'S';
-    piano_gioco->posizione[2][centro + 0].valore = 3;
-    piano_gioco->posizione[2][centro + 0].cardine = 'N';
-
-    piano_gioco->posizione[2][centro + 1].valore = 3;
-    piano_gioco->posizione[2][centro + 1].cardine = 'E';
-    piano_gioco->posizione[2][centro + 2].valore = 5;
-    piano_gioco->posizione[2][centro + 2].cardine = 'O';
-    */
     
     // Libera la memoria occupata
     libera_matrice(mano_giocatore);

@@ -29,20 +29,31 @@ unsigned int inserisci_numero_compreso(char *messaggio, unsigned int minimo, uns
 bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t coordinata, bool orizzontale) {
     // Controlla che la posizione attuale sia libera
     if(piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine) return false;
+    // Per le tessere posizionate in orizzontale
+    if(orizzontale) {
+        // Controlla che la posizione adiacente sia libera
+        if(piano_gioco->posizione[coordinata.riga][coordinata.colonna + 1].cardine) return false;
+    // Altrimenti per quelle posizionate in verticale
+    } else {
+        // Controlla di rientrare nella riga e che la posizione sottostante sia libera
+        if(coordinata.riga + 1 >= piano_gioco->righe || piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine) return false;
+    }
     // Controlla che rientri nel limite sinistro e che abbia un estremo collegato
     if(coordinata.colonna > 0 && piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].valore == da_confrontare->valore) return true;
     // Controlla che rientri nel limite destro e che abbia un estremo collegato
     if(coordinata.colonna < piano_gioco->colonne - (orizzontale + 1) && piano_gioco->posizione[coordinata.riga][coordinata.colonna + orizzontale + 1].valore == (da_confrontare + 1)->valore) return true;
-    // Controlla che la posizione adiacente/sottostante sia libera
-    if(piano_gioco->posizione[coordinata.riga + !orizzontale][coordinata.colonna + orizzontale].cardine) return false;
     // Per tutti i casi rimanenti la posizione non risulta valida
     return false;
 }
 
-/* ... sposta_coordinata(...)
-if(nuovo_indice < 0 || nuovo_indice > dimensione - 1) return coordinate[attuale];
-else return coordinate[attuale + nuovo_indice];
-*/
+unsigned int sposta_indice(size_t posizioni, unsigned int attuale, int spostamento) {
+    // Controlla che il nuovo indice rientri nelle dimensioni dell'array
+    if(attuale + spostamento < 0 || attuale + spostamento > posizioni - 1)
+        // Mantieni il valore dell'indice
+        return attuale;
+    // Modifica l'indice attuale in base allo spostamento
+    return attuale += spostamento;
+}
 
 /*
 int estremi_corrispondono(int estremo_piano, int primo, int secondo) {
@@ -51,6 +62,7 @@ int estremi_corrispondono(int estremo_piano, int primo, int secondo) {
     return 0;
 }
 */
+
 bool mosse_disponibili(matrice_t *mano_giocatore, matrice_t *piano_gioco, coord_t *coordinate, size_t posizioni) {
     // Termina la partita dopo aver esaurite le tessere
     if(mano_giocatore->colonne == 0) return false;

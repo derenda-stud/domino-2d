@@ -44,36 +44,37 @@ void seleziona_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
     size_t posizioni = 0;
     coord_t *coordinate = calcola_coordinate(piano_gioco, da_posizionare, &posizioni, orizzontale);
     
+    // Controlla se sia possibile effettuare almeno una mossa
+    if(!posizioni) {
+        printf("Nessuna mossa disponibile con questa tessera\n");
+        return;
+    }
+    
+    printf("Ho calcolato le coordinate\n");
+    
+    // Stampa a schermo le nuove coordinate ottenute
+    stampa_coordinate(coordinate, posizioni);
+    
     printf("Seleziona dove posizionare la tessera:\n");
     printf(" - Premi 1 per scorrere alla posizione precedente\n");
     printf(" - Premi 2 per scorrere alla posizione successiva\n");
     printf(" - Premi 0 per confermare la posizione selezionata\n"); /* TODO ... */
     
-    //               <--  v  -->                     
-    //   0        1       2       3       4       5       6
-    // (0, 12) ( 0,19) ( 1,10) ( 1,15) ( 1,19) ( 2,13) ( 2,15)
-    
     unsigned int scelta, attuale = 0;
     do {
+        printf("La posizione attuale e': (%2d,%2d)\n", coordinate[attuale].riga, coordinate[attuale].colonna);
         scelta = inserisci_numero_compreso("Seleziona un'opzione", 0, 2);
         switch(scelta) {
-            case 1: // Sposta la coordinata indietro
+            // Sposta la coordinata indietro
+            case 1: attuale = sposta_indice(posizioni, attuale, -1);
                     break;
-            case 2: // Sposta la coordinata avanti
+            // Sposta la coordinata avanti
+            case 2: attuale = sposta_indice(posizioni, attuale, 1);
                     break;
         }
     } while(scelta);
     
-    /*
-    if(ha_premuto 'A') -> -1
-    if(ha_premuto 'D') -> +1
-    if(ha_premuto 'Invio') -> posiziona(cursore[i]);
-    
-    cursore = sposta_cursore(cursori, 1/-1);
-    */
-    
-    // Stampa a schermo le nuove coordinate ottenute
-    stampa_coordinate(coordinate, posizioni);
+    printf("Hai selezionato la posizione: (%2d,%2d)\n", coordinate[attuale].riga, coordinate[attuale].colonna);
     // Libera la memoria occupata
     free(coordinate);
 }
@@ -82,9 +83,9 @@ estremo_t *inserisci_indice(matrice_t *mano_giocatore, char *azione) {
     // Messaggio da stampare a terminale
     char messaggio[50] = "Inserisci l'indice della tessera da ";
     // Inserisci un numero compreso tra 0 e l'indice dell'ultima tessera
-    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, mano_giocatore->colonne);
+    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, mano_giocatore->colonne - 1);
     // Restituisci la tessera trovata all'indice indicato
-    return mano_giocatore->posizione[indice_tessera * 2];
+    return &mano_giocatore->posizione[0][indice_tessera * 2];
 }
 
 /*

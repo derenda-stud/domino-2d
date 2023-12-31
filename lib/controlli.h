@@ -11,6 +11,8 @@ unsigned int inserisci_numero_tessere();
 unsigned int inserisci_numero_compreso(char *messaggio, unsigned int minimo, unsigned int massimo);
 // Valuta se una posizione sul piano di gioco e' valida per l'inserimento di una tessera
 bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t coordinata, bool orizzontale);
+// Sposta l'indice delle coordinate alla posizione precedente/successiva
+unsigned int sposta_indice(size_t posizioni, unsigned int attuale, int spostamento);
 // Controlla se sia possibile aggiungere una tessera al piano di gioco
 bool mosse_disponibili(matrice_t *mano_giocatore, matrice_t *piano_gioco, coord_t *coordinate, size_t posizioni);
 // Controlla che la tessera combaci nella posizione indicata
