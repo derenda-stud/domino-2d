@@ -35,11 +35,10 @@ void inserisci_scelta(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
 }
 
 void seleziona_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
-    // Trova la tessere da prelevare dalla mano del giocatore
+    // Trova i due estremi da prelevare dalla mano del giocatore
     estremo_t *da_posizionare = inserisci_indice(mano_giocatore, "posizionare");
-    
+    // Chiedi all'utente come intende posizionare la tessera selezionata
     bool orizzontale = inserisci_numero_compreso("Come vuoi posizionare la tessera? (1 in orizzontale, 0 in verticale)", 0, 1);
-    
     // Crea un nuovo vettore contenete le coordinate delle posizioni valide
     size_t posizioni = 0;
     coord_t *coordinate = calcola_coordinate(piano_gioco, da_posizionare, &posizioni, orizzontale);
@@ -75,6 +74,14 @@ void seleziona_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
     } while(scelta);
     
     printf("Hai selezionato la posizione: (%2d,%2d)\n", coordinate[attuale].riga, coordinate[attuale].colonna);
+    
+    if(orizzontale) {
+        inserimento_orizzontale(piano_gioco, da_posizionare, coordinate[attuale]);
+    } else {
+        inserimento_verticale(piano_gioco, da_posizionare, coordinate[attuale]);
+    }
+    stampa_matrice(piano_gioco);
+    
     // Libera la memoria occupata
     free(coordinate);
 }

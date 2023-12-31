@@ -36,7 +36,7 @@ bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t
     // Altrimenti per quelle posizionate in verticale
     } else {
         // Controlla di rientrare nella riga e che la posizione sottostante sia libera
-        if(coordinata.riga + 1 >= piano_gioco->righe || piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine) return false;
+        if(coordinata.riga + 1 < piano_gioco->righe && piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine) return false;
     }
     // Controlla che rientri nel limite sinistro e che abbia un estremo collegato
     if(coordinata.colonna > 0 && piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].valore == da_confrontare->valore) return true;
