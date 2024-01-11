@@ -43,11 +43,18 @@ $(BINARY): $(OBJECTS)
 # Chiama il compilatore prendendo come argomenti i file oggetto creati
 	$(CC) -o $@ $^
 
-# -> Per costruire un file oggetto necessito dello stesso nome come sorgente
+# I file oggetto richiedono che sia creata di una cartella separata
+$(OBJECTS): | $(OBJDIR)
+
+# Se non presente, crea una cartella dentro cui salvare ciascun file oggetto
+$(OBJDIR):
+	mkdir $@
+
+# Per costruire un file oggetto necessito dello stesso nome come sorgente
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 # Chiama il compilatore con gli appositi parametri sul file sorgente
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 # La regola [clean] elilima i file oggetto utilizzati durante la compilazione
 clean:
-	rm -rf $(OBJECTS)
+	rm -rf $(OBJDIR)
