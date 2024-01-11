@@ -1,8 +1,7 @@
 #ifndef _DATI_H_
 #define _DATI_H_
 
-#include <stdio.h>
-#include <stdbool.h>
+#include "vettore.h"
 
 // Coordinate corrispondenti del piano di gioco
 typedef struct s_coord {
@@ -27,23 +26,13 @@ typedef struct s_matrice {
 matrice_t *crea_matrice(size_t colonne);
 // Aggiungi una nuova riga alla matrice
 void aggiungi_riga(matrice_t *matrice);
-// Stampa gli estremi presenti in ogni riga della matrice
-void stampa_matrice(matrice_t *matrice);
-// Stampa il valore di un estremo in base al cardine
-void stampa_estremo(estremo_t estremo);
 // Libera la memoria occupata dalla matrice
 void libera_matrice(matrice_t *matrice);
-// Genera gli estremi delle tessera nella mano del giocatore
-void genera_tessere(matrice_t *mano_giocatore);
-// Ritorna un vettore contenente tutte le coordinate delle posizioni valide
-coord_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, size_t *posizioni, bool orizzontale);
-// Stampa riga e colonna di ciascuna coordinata
-void stampa_coordinate(coord_t *coordinate, size_t posizioni);
-// Inserisci in orizzontale una tessera presente nella mano del giocatore sul piano di gioco
-void inserimento_orizzontale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t coordinata);
-// Inserisci in verticale una tessera presente nella mano del giocatore sul piano di gioco
-void inserimento_verticale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t coordinata);
-// Incrementa il valore dei cardini perche' corrispondano agli estremi posizionati in verticale
-void incrementa_cardini(matrice_t *piano_gioco, coord_t coordinata);
+// Stampa gli estremi presenti in ogni riga del piano di gioco
+void stampa_piano(matrice_t *piano_gioco);
+// Stampa gli estremi presenti nella mano del giocatore
+void stampa_mano(vect_t *mano_giocatore);
+// Stampa il valore di un estremo in base al cardine
+void stampa_estremi(estremo_t *estremi, size_t dimensione);
 
 #endif

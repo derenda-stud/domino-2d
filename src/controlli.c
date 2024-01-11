@@ -26,11 +26,11 @@ unsigned int inserisci_numero_compreso(char *messaggio, unsigned int minimo, uns
     return (unsigned) numero;
 }
 
-bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t coordinata, bool orizzontale) {
+bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t coordinata, bool orientamento) {
     // Controlla che la posizione attuale sia libera
     if(piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine) return false;
     // Per le tessere posizionate in orizzontale
-    if(orizzontale) {
+    if(orientamento) {
         // Controlla che la posizione adiacente sia libera
         if(piano_gioco->posizione[coordinata.riga][coordinata.colonna + 1].cardine) return false;
     // Altrimenti per quelle posizionate in verticale
@@ -41,7 +41,7 @@ bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t
     // Controlla che rientri nel limite sinistro e che abbia un estremo collegato
     if(coordinata.colonna > 0 && piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].valore == da_confrontare->valore) return true;
     // Controlla che rientri nel limite destro e che abbia un estremo collegato
-    if(coordinata.colonna < piano_gioco->colonne - (orizzontale + 1) && piano_gioco->posizione[coordinata.riga][coordinata.colonna + orizzontale + 1].valore == (da_confrontare + 1)->valore) return true;
+    if(coordinata.colonna < piano_gioco->colonne - (orientamento + 1) && piano_gioco->posizione[coordinata.riga][coordinata.colonna + orientamento + 1].valore == (da_confrontare + 1)->valore) return true;
     // Per tutti i casi rimanenti la posizione non risulta valida
     return false;
 }

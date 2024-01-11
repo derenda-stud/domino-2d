@@ -4,12 +4,14 @@
 #include "struttura_dati.h"
 
 // Stampa le operazioni eseguite durante il turno del giocatore
-void stampa_turno(matrice_t *mano_giocatore, matrice_t *piano_gioco);
+void stampa_turno(vect_t *mano_giocatore, matrice_t *piano_gioco);
 // Menu che permette di inserire la prossima mossa da effettuare
-void inserisci_scelta(matrice_t *mano_giocatore, matrice_t *piano_gioco);
+void inserisci_scelta(vect_t *mano_giocatore, matrice_t *piano_gioco);
 // Seleziona la posizione della tessera da inserire
-void seleziona_tessera(matrice_t *mano_giocatore, matrice_t *piano_gioco);
+void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco);
+// Menu per selezionare dove posizionare la tessera
+coord_t *seleziona_posizione(vect_t *coordinate);
 // Ritorna la tessera presente ad un particolare indice
-estremo_t *inserisci_indice(matrice_t *mano_giocatore, char *azione);
+estremo_t *inserisci_indice(vect_t *mano_giocatore, char *azione);
 
 #endif
