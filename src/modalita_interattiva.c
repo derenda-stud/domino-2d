@@ -9,15 +9,16 @@
 
 void stampa_turno(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     // Continua finche' rimangono tessere in mano e si possono effettuare delle mosse
-    // while(mosse_disponibili(mano_giocatore, piano_gioco));
-    // Stampa il piano di gioco nello stato corrente
-    printf("Piano di gioco:\n");
-    stampa_piano(piano_gioco);
-    // Stampa le tessere presenti nella mano del giocatore
-    printf("Mano del giocatore:\n");
-    stampa_mano(mano_giocatore);
-    // Inserisci la prossima mossa da effettuare
-    inserisci_scelta(mano_giocatore, piano_gioco);
+    //while(mosse_disponibili(mano_giocatore, piano_gioco)) {
+        // Stampa il piano di gioco nello stato corrente
+        printf("Piano di gioco:\n");
+        stampa_piano(piano_gioco);
+        // Stampa le tessere presenti nella mano del giocatore
+        printf("Mano del giocatore:\n");
+        stampa_mano(mano_giocatore);
+        // Inserisci la prossima mossa da effettuare
+        inserisci_scelta(mano_giocatore, piano_gioco);
+    //}
 }
 
 void inserisci_scelta(vect_t *mano_giocatore, matrice_t *piano_gioco) {
@@ -59,8 +60,6 @@ void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     } else {
         inserimento_verticale(piano_gioco, da_posizionare, coordinata);
     }
-    stampa_piano(piano_gioco);
-    
     // Libera la memoria occupata
     libera_vettore(coordinate);
 }
@@ -98,10 +97,10 @@ coord_t *seleziona_posizione(vect_t *coordinate) {
 estremo_t *inserisci_indice(vect_t *mano_giocatore, char *azione) {
     // Messaggio da stampare a terminale
     char messaggio[50] = "Inserisci l'indice della tessera da ";
-    // Inserisci un numero compreso tra 0 e l'indice dell'ultima tessera
-    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, mano_giocatore->dimensione - 1);
-    // Restituisci la tessera trovata all'indice indicato
-    return elemento_ad_indice(mano_giocatore, indice_tessera);
+    // Inserisci un numero compreso tra 0 e l'indice dell'ultimo estremo
+    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, (mano_giocatore->dimensione / 2) - 1);
+    // Restituisci il puntatore all'estremo sinistro trovato all'indice indicato
+    return elemento_ad_indice(mano_giocatore, indice_tessera * 2);
 }
 
 /*

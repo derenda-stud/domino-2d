@@ -41,7 +41,7 @@ bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t
     // Controlla che rientri nel limite sinistro e che abbia un estremo collegato
     if(coordinata.colonna > 0 && piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].valore == da_confrontare->valore) return true;
     // Controlla che rientri nel limite destro e che abbia un estremo collegato
-    if(coordinata.colonna < piano_gioco->colonne - (orientamento + 1) && piano_gioco->posizione[coordinata.riga][coordinata.colonna + orientamento + 1].valore == (da_confrontare + 1)->valore) return true;
+    if(coordinata.colonna < piano_gioco->colonne - (orientamento + 1) && piano_gioco->posizione[coordinata.riga][coordinata.colonna + orientamento + 1].valore == (da_confrontare + orientamento)->valore) return true;
     // Per tutti i casi rimanenti la posizione non risulta valida
     return false;
 }
@@ -63,17 +63,15 @@ int estremi_corrispondono(int estremo_piano, int primo, int secondo) {
 }
 */
 
-bool mosse_disponibili(matrice_t *mano_giocatore, matrice_t *piano_gioco, coord_t *coordinate, size_t posizioni) {
+bool mosse_disponibili(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
     // Termina la partita dopo aver esaurite le tessere
     if(mano_giocatore->colonne == 0) return false;
     // Altrimenti per ogni tessera presente nella mano del giocatore
     for(size_t i=0; i<mano_giocatore->colonne; i++) {
-        // Per ogni posizione valida
-        for(size_t j=0; j<posizioni; j++) {
-            // Controlla se la tessera combacia in quella posizione
-            if(mossa_legale(mano_giocatore, piano_gioco, i, coordinate[j])) {
-                return true;
-            }
+        // Confronta per gli inserimenti in verticale ed orizzontale 
+        for(bool orientamento = 0; orientamento < 1; orientamento++) {
+            // Verifica se esista una posizione valida
+            vect_t *coordinate = calcola_coordinate(piano_gioco, elemento_ad_indice(mano_giocatore, i * 2), orientamento);
         }
     }
     // Non ho trovato nessuna mossa legale

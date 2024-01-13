@@ -24,7 +24,7 @@ vect_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, bo
     for(size_t i=0; i<piano_gioco->righe; i++) {
         // Per ciascuna colonna del piano di gioco
         for(size_t j=0; j<piano_gioco->colonne; j++) {
-            // Memorizza la posizione attuale
+            // Memorizza la coordinata attuale
             coord_t attuale = {i, j};
             // Trova dove e' possibile posizionare una tessera
             if(posizione_valida(piano_gioco, da_confrontare, attuale, orientamento)) {
