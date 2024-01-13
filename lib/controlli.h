@@ -14,8 +14,6 @@ bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t
 // Sposta l'indice delle coordinate alla posizione precedente/successiva
 unsigned int sposta_indice(size_t posizioni, unsigned int attuale, int spostamento);
 // Controlla se sia possibile aggiungere una tessera al piano di gioco
-bool mosse_disponibili(matrice_t *mano_giocatore, matrice_t *piano_gioco);
-// Controlla che la tessera combaci nella posizione indicata
-bool mossa_legale(matrice_t *mano_giocatore, matrice_t *piano_gioco, size_t indice, coord_t coordinata);
+bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco);
 
 #endif

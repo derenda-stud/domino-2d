@@ -46,6 +46,17 @@ bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t
     return false;
 }
 
+/*
+      0   1   2   3   4   5   6   7   8   9  10  11  12  13
+  0  --  --  --  --  --  {5  [5  1]  [1  6]  {6  --  --  --
+  1  --  --  --  [4  6]  6}  {6  --  --  {2  2}  --  --  --
+  2  --  --  --  --  --  --  3}  [3  1]  3}  --  --  --  --
+  
+    if(valore sinistro non coincide) false;
+    if(valore destro non coincide) false;
+    per tutti gli altri casi -> true;
+*/
+
 unsigned int sposta_indice(size_t posizioni, unsigned int attuale, int spostamento) {
     // Controlla che il nuovo indice rientri nelle dimensioni dell'array
     if(attuale + spostamento < 0 || attuale + spostamento > posizioni - 1)
@@ -63,21 +74,23 @@ int estremi_corrispondono(int estremo_piano, int primo, int secondo) {
 }
 */
 
-bool mosse_disponibili(matrice_t *mano_giocatore, matrice_t *piano_gioco) {
+bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     // Termina la partita dopo aver esaurite le tessere
-    if(mano_giocatore->colonne == 0) return false;
+    if(mano_giocatore->dimensione == 0) return false;
     // Altrimenti per ogni tessera presente nella mano del giocatore
-    for(size_t i=0; i<mano_giocatore->colonne; i++) {
+    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
         // Confronta per gli inserimenti in verticale ed orizzontale 
         for(bool orientamento = 0; orientamento < 1; orientamento++) {
-            // Verifica se esista una posizione valida
+            // Calcola le coordinate per la tessera corrente
             vect_t *coordinate = calcola_coordinate(piano_gioco, elemento_ad_indice(mano_giocatore, i * 2), orientamento);
+            // Controlla se esiste almeno una coordinata valida
+            bool valida = coordinate->dimensione;
+            // Libera la memoria allocata dalle coordinate
+            libera_vettore(coordinate); 
+            // Termina il ciclo in presenza di una coordinata valida
+            if(valida) return true;
         }
     }
     // Non ho trovato nessuna mossa legale
     return false;
-}
-
-bool mossa_legale(matrice_t *mano_giocatore, matrice_t *piano_gioco, size_t indice, coord_t coordinata) {
-    return true;
 }

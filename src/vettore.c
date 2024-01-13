@@ -36,7 +36,7 @@ void inserimento_coda(vect_t *vettore, void *elemento) {
     // Controlla che sia possibile effettuare l'inserimento
     if(vettore->capacita <= vettore->dimensione) {
         // Incrementa la capacita' del vettore
-        realloc(vettore->posizione, vettore->capacita + 1);
+        vettore->posizione = realloc(vettore->posizione, sizeof(vettore->spazio) * (vettore->capacita + 1));
         vettore->capacita += 1;
     }
     // Inserisci l'elemento nell'ultima posizione del vettore

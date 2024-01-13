@@ -37,16 +37,16 @@ int main() {
 
 void inserimento_temporaneo(matrice_t *piano_gioco, unsigned int colonne) {
     estremo_t estremi_temp[] = {
-        // [5|1]        [1|6]         {5          [4|6]         {6          [3|2]         {6
-        //                            6}                        2}                        3}
+        // [5|1]        [1|6]         {5          [4|6]         {6           {3           {6
+        //                            6}                        2}           2}           3}
         {5,1},{1,2}, {1,1},{6,2}, {5,1},{6,2}, {4,1},{6,2}, {6,1},{2,2}, {3,1},{2,2}, {6,1},{3,2}
     };
     unsigned int centro = colonne / 2 - 1;
     coord_t coordinate_temp[] = {
-        {0,centro+0},{0,centro+2},{0,centro-1},{1,centro-3},{0,centro+4},{1,centro+2},{1,centro+0}
+        {0,centro+0},{0,centro+2},{0,centro-1},{1,centro-3},{0,centro+4},{1,centro+3},{1,centro+0}
     };
     bool orizzontali[] = {
-        true,            true,       false,        true,         false,        true,       false
+        true,            true,       false,        true,         false,        false,       false
     };
     for(int i=0; i<7; i++) {
         if(orizzontali[i]) {

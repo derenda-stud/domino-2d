@@ -9,7 +9,7 @@
 
 void stampa_turno(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     // Continua finche' rimangono tessere in mano e si possono effettuare delle mosse
-    //while(mosse_disponibili(mano_giocatore, piano_gioco)) {
+    while(mosse_disponibili(mano_giocatore, piano_gioco)) {
         // Stampa il piano di gioco nello stato corrente
         printf("Piano di gioco:\n");
         stampa_piano(piano_gioco);
@@ -18,7 +18,7 @@ void stampa_turno(vect_t *mano_giocatore, matrice_t *piano_gioco) {
         stampa_mano(mano_giocatore);
         // Inserisci la prossima mossa da effettuare
         inserisci_scelta(mano_giocatore, piano_gioco);
-    //}
+    }
 }
 
 void inserisci_scelta(vect_t *mano_giocatore, matrice_t *piano_gioco) {
@@ -39,11 +39,21 @@ void inserisci_scelta(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     }
 }
 
+size_t inserisci_indice(vect_t *mano_giocatore, char *azione) {
+    // Messaggio da stampare a terminale
+    char messaggio[50] = "Inserisci l'indice della tessera da ";
+    // Inserisci un numero compreso tra 0 e l'indice dell'ultimo estremo
+    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, (mano_giocatore->dimensione / 2) - 1);
+    // Restituisci l'indice dell'estremo sinistro
+    return indice_tessera * 2;
+}
+
 void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     // Trova i due estremi da prelevare dalla mano del giocatore
-    estremo_t *da_posizionare = inserisci_indice(mano_giocatore, "posizionare");
+    size_t indice_estremo = inserisci_indice(mano_giocatore, "posizionare");
+    estremo_t *da_posizionare = elemento_ad_indice(mano_giocatore, indice_estremo);
     // Chiedi all'utente come intende posizionare la tessera selezionata
-    bool orientamento = inserisci_numero_compreso("Come vuoi posizionare la tessera? (1 in orizzontale, 0 in verticale)", 0, 1);
+    bool orientamento = inserisci_numero_compreso("Come vuoi posizionare la tessera? (0 in verticale, 1 in orizzontale)", 0, 1);
     // Restituisci il vettore creato dalle posizioni valide
     vect_t *coordinate = calcola_coordinate(piano_gioco, da_posizionare, orientamento);
     
@@ -59,6 +69,10 @@ void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco) {
         inserimento_orizzontale(piano_gioco, da_posizionare, coordinata);
     } else {
         inserimento_verticale(piano_gioco, da_posizionare, coordinata);
+    }
+    // Rimuovi i due estremi posizionati dalla mano del giocatore
+    for(size_t i=0; i<2; i++) {
+        rimuovi_ad_indice(mano_giocatore, indice_estremo);
     }
     // Libera la memoria occupata
     libera_vettore(coordinate);
@@ -92,15 +106,6 @@ coord_t *seleziona_posizione(vect_t *coordinate) {
     printf("Hai selezionato la posizione: (%2d,%2d)\n", coordinata_attuale->riga, coordinata_attuale->colonna);
     
     return elemento_ad_indice(coordinate, indice_attuale);
-}
-
-estremo_t *inserisci_indice(vect_t *mano_giocatore, char *azione) {
-    // Messaggio da stampare a terminale
-    char messaggio[50] = "Inserisci l'indice della tessera da ";
-    // Inserisci un numero compreso tra 0 e l'indice dell'ultimo estremo
-    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, (mano_giocatore->dimensione / 2) - 1);
-    // Restituisci il puntatore all'estremo sinistro trovato all'indice indicato
-    return elemento_ad_indice(mano_giocatore, indice_tessera * 2);
 }
 
 /*
