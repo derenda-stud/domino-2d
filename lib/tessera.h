@@ -9,6 +9,8 @@
 void genera_estremi(vect_t *mano_giocatore);
 // Ritorna un vettore contenente le coordinate delle posizioni valide
 vect_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, bool orientamento);
+unsigned int prima_posizione(matrice_t *piano_gioco, unsigned int riga);
+unsigned int ultima_posizione(matrice_t *piano_gioco, unsigned int riga);
 // Stampa riga e colonna di ciascuna coordinata
 void stampa_coordinate(vect_t *coordinate);
 // Inserisci in orizzontale una tessera presente nella mano del giocatore sul piano di gioco

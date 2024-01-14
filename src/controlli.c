@@ -30,27 +30,27 @@ bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t
     // Controlla che la posizione attuale sia libera
     if(piano_gioco->posizione[coordinata.riga][coordinata.colonna].cardine) return false;
     // Per le tessere posizionate in orizzontale
-    if(orientamento) {
-        // Controlla che la posizione adiacente sia libera
+    if(orientamento){
+        // Controlla che la posizione successiva sia libera
         if(piano_gioco->posizione[coordinata.riga][coordinata.colonna + 1].cardine) return false;
     // Altrimenti per quelle posizionate in verticale
     } else {
         // Controlla di rientrare nella riga e che la posizione sottostante sia libera
-        if(coordinata.riga + 1 < piano_gioco->righe && piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine) return false;
+        if(piano_gioco->righe > coordinata.riga + 1 && piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine) return false;
     }
-    // Controlla che rientri nel limite sinistro e che abbia un estremo collegato
-    if(coordinata.colonna > 0 && piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].valore == da_confrontare->valore) return true;
-    // Controlla che rientri nel limite destro e che abbia un estremo collegato
-    if(coordinata.colonna < piano_gioco->colonne - (orientamento + 1) && piano_gioco->posizione[coordinata.riga][coordinata.colonna + orientamento + 1].valore == (da_confrontare + orientamento)->valore) return true;
-    // Per tutti i casi rimanenti la posizione non risulta valida
-    return false;
+    // Controlla che l'estremo posizionato a sinistra corrisponda
+    if(piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].cardine && piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].valore != da_confrontare->valore) return false;
+    // Controlla che l'estremo posizionato a destra corrisponda
+    if(piano_gioco->posizione[coordinata.riga][coordinata.colonna + (orientamento + 1)].cardine && piano_gioco->posizione[coordinata.riga][coordinata.colonna + (orientamento + 1)].valore != (da_confrontare + orientamento)->valore) return false;
+    // Per tutti i casi rimanenti la posizione risulta valida
+    return true;
 }
 
 /*
-      0   1   2   3   4   5   6   7   8   9  10  11  12  13
-  0  --  --  --  --  --  {5  [5  1]  [1  6]  {6  --  --  --
-  1  --  --  --  [4  6]  6}  {6  --  --  {2  2}  --  --  --
-  2  --  --  --  --  --  --  3}  [3  1]  3}  --  --  --  --
+      0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29
+  0  --  --  --  --  --  --  --  --  --  --  --  --  --  {5  [5  1]  [1  6]  {6  --  --  --  --  --  --  --  --  --  --  --
+  1  --  --  --  --  --  --  --  --  --  --  --  [4  6]  6}  {6  --  --  {3  2}  --  --  --  --  --  --  --  --  --  --  --
+  2  --  --  --  --  --  --  --  --  --  --  --  --  --  --  3}  --  --  2}  --  --  --  --  --  --  --  --  --  --  --  --
   
     if(valore sinistro non coincide) false;
     if(valore destro non coincide) false;
@@ -77,16 +77,16 @@ int estremi_corrispondono(int estremo_piano, int primo, int secondo) {
 bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     // Termina la partita dopo aver esaurite le tessere
     if(mano_giocatore->dimensione == 0) return false;
-    // Altrimenti per ogni tessera presente nella mano del giocatore
-    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        // Confronta per gli inserimenti in verticale ed orizzontale 
-        for(bool orientamento = 0; orientamento < 1; orientamento++) {
+    // Altrimenti per ogni estremo presente nella mano del giocatore
+    for(size_t i=0; i<mano_giocatore->dimensione; i+=2) {
+        // Confronta gli inserimenti in verticale ed orizzontale
+        for(size_t orientamento = 0; orientamento <= 1; orientamento++) {
             // Calcola le coordinate per la tessera corrente
-            vect_t *coordinate = calcola_coordinate(piano_gioco, elemento_ad_indice(mano_giocatore, i * 2), orientamento);
+            vect_t *coordinate = calcola_coordinate(piano_gioco, elemento_ad_indice(mano_giocatore, i), orientamento);
             // Controlla se esiste almeno una coordinata valida
             bool valida = coordinate->dimensione;
             // Libera la memoria allocata dalle coordinate
-            libera_vettore(coordinate); 
+            libera_vettore(coordinate);
             // Termina il ciclo in presenza di una coordinata valida
             if(valida) return true;
         }

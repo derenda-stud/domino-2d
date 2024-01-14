@@ -17,7 +17,7 @@ int main() {
     // Richiesta da parte dell'utente per il numero di tessere
     unsigned int numero_tessere = inserisci_numero_tessere();
     // Inizializzazione delle colonne con il numero di tessere indicato
-    unsigned int colonne = 4 * (numero_tessere - 1) + 2;
+    unsigned int colonne = 4 * numero_tessere;
     // La mano del giocatore e' un vettore lineare
     vect_t *mano_giocatore = crea_vettore(sizeof(estremo_t), numero_tessere * 2);
     // Il piano di gioco e' una matrice con righe graduali
@@ -43,7 +43,7 @@ void inserimento_temporaneo(matrice_t *piano_gioco, unsigned int colonne) {
     };
     unsigned int centro = colonne / 2 - 1;
     coord_t coordinate_temp[] = {
-        {0,centro+0},{0,centro+2},{0,centro-1},{1,centro-3},{0,centro+4},{1,centro+3},{1,centro+0}
+        {0,centro+0},{0,centro+2},{0,centro-1},{1,centro-3},{0,centro+4},{1,centro+5},{1,centro+0}
     };
     bool orizzontali[] = {
         true,            true,       false,        true,         false,        false,       false

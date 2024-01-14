@@ -36,7 +36,7 @@ void inserimento_coda(vect_t *vettore, void *elemento) {
     // Controlla che sia possibile effettuare l'inserimento
     if(vettore->capacita <= vettore->dimensione) {
         // Incrementa la capacita' del vettore
-        vettore->posizione = realloc(vettore->posizione, sizeof(vettore->spazio) * (vettore->capacita + 1));
+        vettore->posizione = realloc(vettore->posizione, vettore->spazio * (vettore->capacita + 1));
         vettore->capacita += 1;
     }
     // Inserisci l'elemento nell'ultima posizione del vettore
@@ -54,6 +54,6 @@ void rimuovi_ad_indice(vect_t *vettore, size_t indice) {
     // Decrementa la capacita' e la dimensione effettiva
     vettore->dimensione -= 1;
     vettore->capacita -= 1;
-    // Libera la memoria all'ultima posizione
-    vettore = realloc(vettore, vettore->capacita);
+    // Rialloca la memoria eliminando l'ultima posizione
+    vettore->posizione = realloc(vettore->posizione, vettore->spazio * vettore->capacita);
 }

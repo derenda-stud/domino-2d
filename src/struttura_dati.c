@@ -35,6 +35,9 @@ void libera_matrice(matrice_t *matrice) {
     // Libera la memoria del puntatore alla prima posizione
     free(matrice->posizione);
     matrice->posizione = NULL;
+    // Inizializza i parametri della matrice
+    matrice->righe = 0;
+    matrice->colonne = 0;
     // Libera la memoria occupata dal puntatore iniziale
     free(matrice);
 }

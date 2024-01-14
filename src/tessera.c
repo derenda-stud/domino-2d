@@ -22,8 +22,11 @@ vect_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, bo
     vect_t *coordinate = crea_vettore(sizeof(coord_t), 0);
     // Per ciascuna riga del piano di gioco
     for(size_t i=0; i<piano_gioco->righe; i++) {
-        // Per ciascuna colonna del piano di gioco
-        for(size_t j=0; j<piano_gioco->colonne; j++) {
+        // Calcolo la prima e l'ultima posizione utile
+        unsigned int inizio = prima_posizione(piano_gioco, i) - orientamento;
+        unsigned int fine = ultima_posizione(piano_gioco, i);
+        // Scorri tutte le posizioni utili della riga corrente
+        for(size_t j=inizio; j<=fine; j++) {
             // Memorizza la coordinata attuale
             coord_t attuale = {i, j};
             // Trova dove e' possibile posizionare una tessera
@@ -35,6 +38,24 @@ vect_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, bo
     }
     // Ritorna il nuovo vettore creato
     return coordinate;
+}
+
+unsigned int prima_posizione(matrice_t *piano_gioco, unsigned int riga) {
+    for(size_t j=0; j<piano_gioco->colonne - 2; j++) {
+        if(piano_gioco->posizione[riga][j].cardine) {
+            return j - 1;
+        }
+    }
+    return piano_gioco->colonne;
+}
+
+unsigned int ultima_posizione(matrice_t *piano_gioco, unsigned int riga) {
+    for(size_t j=piano_gioco->colonne - 2; j>=0; j--) {
+        if(piano_gioco->posizione[riga][j].cardine) {
+            return j + 1;
+        }
+    }
+    return 0;
 }
 
 void stampa_coordinate(vect_t *coordinate) {
