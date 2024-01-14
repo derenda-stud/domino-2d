@@ -42,6 +42,8 @@ bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t
     if(piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].cardine && piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].valore != da_confrontare->valore) return false;
     // Controlla che l'estremo posizionato a destra corrisponda
     if(piano_gioco->posizione[coordinata.riga][coordinata.colonna + (orientamento + 1)].cardine && piano_gioco->posizione[coordinata.riga][coordinata.colonna + (orientamento + 1)].valore != (da_confrontare + orientamento)->valore) return false;
+    // Controlla che almeno uno dei collegamenti sia valido
+    if(!piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].cardine && !piano_gioco->posizione[coordinata.riga][coordinata.colonna + (orientamento + 1)].cardine) return false;
     // Per tutti i casi rimanenti la posizione risulta valida
     return true;
 }
@@ -50,7 +52,7 @@ bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t
       0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29
   0  --  --  --  --  --  --  --  --  --  --  --  --  --  {5  [5  1]  [1  6]  {6  --  --  --  --  --  --  --  --  --  --  --
   1  --  --  --  --  --  --  --  --  --  --  --  [4  6]  6}  {6  --  --  {3  2}  --  --  --  --  --  --  --  --  --  --  --
-  2  --  --  --  --  --  --  --  --  --  --  --  --  --  --  3}  --  --  2}  --  --  --  --  --  --  --  --  --  --  --  --
+  2  --  --  --  --  --  --  --  --  --  --  --  --  --  --  3}  3   4   2}  --  --  --  --  --  --  --  --  --  --  --  --
   
     if(valore sinistro non coincide) false;
     if(valore destro non coincide) false;
@@ -77,6 +79,8 @@ int estremi_corrispondono(int estremo_piano, int primo, int secondo) {
 bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     // Termina la partita dopo aver esaurite le tessere
     if(mano_giocatore->dimensione == 0) return false;
+    // Continua la partita se non sono ancora state posizionate tessere
+    if(prima_posizione(piano_gioco, 0) > ultima_posizione(piano_gioco, 0)) return true;
     // Altrimenti per ogni estremo presente nella mano del giocatore
     for(size_t i=0; i<mano_giocatore->dimensione; i+=2) {
         // Confronta gli inserimenti in verticale ed orizzontale

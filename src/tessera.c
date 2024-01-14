@@ -68,15 +68,25 @@ void stampa_coordinate(vect_t *coordinate) {
     }
 }
 
+void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, size_t indice, coord_t *coordinata, bool orientamento) {
+    // Inserisci la tessera selezionata sul piano di gioco
+    if(orientamento) {
+        inserimento_orizzontale(piano_gioco, elemento_ad_indice(mano_giocatore, indice), coordinata);
+    } else {
+        inserimento_verticale(piano_gioco, elemento_ad_indice(mano_giocatore, indice), coordinata);
+    }
+    // Rimuovi i due estremi posizionati dalla mano del giocatore
+    for(size_t i=0; i<2; i++) {
+        rimuovi_ad_indice(mano_giocatore, indice);
+    }
+}
+
 void inserimento_orizzontale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t *coordinata) {
     // Memorizza l'estremo sinistro nella posizione corrente
     piano_gioco->posizione[coordinata->riga][coordinata->colonna] = *estremo_sinistro;
     // Memorizza l'estremo destro nella posizione adiacente
     piano_gioco->posizione[coordinata->riga][coordinata->colonna + 1] = *(estremo_sinistro + 1);
 }
-
-// Rimuovi i due estremi posizionati dalla mano del giocatore
-// for(int i=0; i<2; i++) rimuovi_ad_indice(mano_giocatore, indice);
 
 void inserimento_verticale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t *coordinata) {
     // Controlla se sia necessario aggiungere una nuova riga
@@ -92,4 +102,13 @@ void inserimento_verticale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, 
 void incrementa_cardini(matrice_t *piano_gioco, coord_t *coordinata) {
     piano_gioco->posizione[coordinata->riga][coordinata->colonna].cardine += 2;
     piano_gioco->posizione[coordinata->riga + 1][coordinata->colonna].cardine += 2;
+}
+
+void ruota_tessera(vect_t *mano_giocatore, size_t indice) {
+    // Preleva il primo estremo alla posizione indicata
+    estremo_t *sinistro = elemento_ad_indice(mano_giocatore, indice);
+    // Effettua lo scambio del valore dei due estremi
+    unsigned int valore_temporaneo = sinistro->valore;
+    sinistro->valore = (sinistro + 1)->valore;
+    (sinistro + 1)->valore = valore_temporaneo;
 }
