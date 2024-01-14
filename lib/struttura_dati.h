@@ -15,6 +15,12 @@ typedef struct s_estremo {
     unsigned int cardine;
 } estremo_t;
 
+// Il posizionamento di una tessera ritorna una combinazione 
+typedef struct s_comb {
+    coord_t posizione;
+    unsigned int rotazione;
+} comb_t;
+
 // Vettore dinamico con dimensione [righe * colonne]
 typedef struct s_matrice {
     estremo_t **posizione;
