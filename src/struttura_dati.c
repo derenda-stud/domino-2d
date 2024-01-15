@@ -1,123 +1,92 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../lib/struttura_dati.h"
 
-mano_t *crea_mano(unsigned int numero_tessere) {
-    // Alloca la memoria per il puntatore iniziale
-    mano_t *mano_giocatore = malloc(sizeof(mano_t));
-    // Inizializza i parametri allocando la memoria per le tessere
-    mano_giocatore->tessere = malloc(sizeof(tessera_t) * numero_tessere);
-    // Memorizza la dimensione attuale dell'array
-    mano_giocatore->dimensione = numero_tessere;
-    // Ritorna il puntatore alla struttura dati creata
-    return mano_giocatore;
+matrice_t *crea_matrice(size_t colonne) {
+    // Alloca la memoria per il puntatore alla matrice
+    matrice_t *matrice = malloc(sizeof(matrice_t));
+    // Imposta i parametri con valori inizializzati
+    matrice->posizione = NULL;
+    matrice->righe = 0;
+    matrice->colonne = colonne;
+    // Aggiungi una riga come predefinito
+    aggiungi_riga(matrice);
+    // Ritorna la nuova matrice creata
+    return matrice;
 }
 
-void genera_tessere(mano_t *mano_giocatore) {
-    // Per ciascuna posizione nella mano
-    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        // Inizializza una tessera con estremi casuali
-        mano_giocatore->tessere[i].estremo_sinistro = rand() % 6 + 1;
-        mano_giocatore->tessere[i].estremo_destro = rand() % 6 + 1;
-    }
-}
-
-void stampa_mano(mano_t *mano_giocatore) {
-    // Stampa le tessere nella mano del giocatore
-    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        printf("[%d|%d] ", mano_giocatore->tessere[i].estremo_sinistro, mano_giocatore->tessere[i].estremo_destro);
-    }
-    printf("\n");
-    // Stampa gli indici per ogni tessera
-    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        printf("  %d   ", i);
-    }
-    printf("\n");
-}
-
-void libera_mano(mano_t *mano_giocatore) {
-    // Libera la memoria occupata dalle tessere
-    free(mano_giocatore->tessere);
-    mano_giocatore->tessere = NULL;
-    // Libera la memoria del puntatore iniziale
-    free(mano_giocatore);
-}
-
-piano_t *crea_piano(unsigned int colonne) {
-    // Alloca la memoria necessaria per memorizzare il piano di gioco
-    piano_t *piano_gioco = malloc(sizeof(piano_t));
-    // Inizializza i parametri del piano di gioco
-    piano_gioco->posizione = NULL;
-    piano_gioco->righe = 0;
-    piano_gioco->colonne = colonne;
-    // Ritorna il puntatore alla nuova struttura dati
-    return piano_gioco;
-}
-
-void aggiungi_riga(piano_t *piano_gioco) {
-    // Alloco la memoria necessaria per memorizzare la nuova riga
-    piano_gioco->posizione = realloc(piano_gioco->posizione, sizeof(dato_t *) * (piano_gioco->righe + 1));
-    // Alloco la memoria per memorizzare gli elementi della nuova riga
-    piano_gioco->posizione[piano_gioco->righe] = calloc(piano_gioco->colonne, sizeof(dato_t));
+void aggiungi_riga(matrice_t *matrice) {
+    // Alloco la memoria necessaria per il nuovo puntatore
+    matrice->posizione = realloc(matrice->posizione, sizeof(estremo_t *) * (matrice->righe + 1));
+    // Alloco la memoria necessaria per gli elementi della nuova riga
+    matrice->posizione[matrice->righe] = calloc(matrice->colonne, sizeof(estremo_t));
     // Incrementa il numero di righe attuali
-    piano_gioco->righe++;
+    matrice->righe++;
 }
 
-void stampa_piano(piano_t *piano_gioco) {
-    // Stampa gli indici degli estremi
-    printf("  ");
-    for(size_t i=0; i<piano_gioco->colonne; i++) {
-        printf(" %2d ", i);
+void libera_matrice(matrice_t *matrice) {
+    // Libera tutte le righe della matrice
+    for(size_t i=0; i<matrice->righe; i++) {
+        free(matrice->posizione[i]);
+        matrice->posizione[i] = NULL;
+    }
+    // Libera la memoria del puntatore alla prima posizione
+    free(matrice->posizione);
+    matrice->posizione = NULL;
+    // Inizializza i parametri della matrice
+    matrice->righe = 0;
+    matrice->colonne = 0;
+    // Libera la memoria occupata dal puntatore iniziale
+    free(matrice);
+}
+
+
+void stampa_piano(matrice_t *piano_gioco) {
+    // Stampa un intestazione contenente le colonne
+    printf("    ");
+    for(size_t j=0; j<piano_gioco->colonne; j++) {
+        printf(" %2d ", j);
     }
     printf("\n");
-    // Per ogni riga nel piano di gioco
+    // Per ogni riga della piano_gioco
     for(size_t i=0; i<piano_gioco->righe; i++) {
-        // Stampa la riga attuale
-        printf("%2d", i);
-        // Stampa gli estremi in ciascuna colonna
-        for(size_t j=0; j<piano_gioco->colonne; j++) {
-            // In base al valore assunto dal cardine
-            switch(piano_gioco->posizione[i][j].cardine) {
-                // Stampa correttamente l'estremo
-                case 'N': {
-                    printf(" {%d ", piano_gioco->posizione[i][j].estremo);
-                    break;
-                }
-                case 'S': {
-                    printf(" %d} ", piano_gioco->posizione[i][j].estremo);
-                    break;
-                }
-                case 'E': {
-                    printf(" [%d ", piano_gioco->posizione[i][j].estremo);
-                    break;
-                }
-                case 'O': {
-                    printf(" %d] ", piano_gioco->posizione[i][j].estremo);
-                    break;
-                }
-                // Quando non e' stato memorizzato un valore
-                default: {
-                    // Stampa uno spazio vuoto
-                    printf(" -- ");
-                    break;
-                }
-            }
-        }
-        // Stampa la riga successiva
-        printf("\n");
+        // Stampa l'indice della riga corrente
+        printf(" %2d ", i);
+        // Stampa gli elementi presenti nella riga
+        stampa_estremi(piano_gioco->posizione[i], piano_gioco->colonne);
     }
 }
 
-void libera_piano(piano_t *piano_gioco) {
-    // Libera tutte le righe del piano di gioco
-    for(size_t i=0; i<piano_gioco->righe; i++) {
-        free(piano_gioco->posizione[i]);
-        piano_gioco->posizione[i] = NULL;
+void stampa_mano(vect_t *mano_giocatore) {
+    // Stampa gli estremi contenuti nella mano del giocatore
+    stampa_estremi(mano_giocatore->posizione, mano_giocatore->dimensione);
+    // Stampa gli indici sotto ciascuna tessera
+    for(size_t i=0; i<mano_giocatore->dimensione / 2; i++) {
+        printf("   %2d   ", i);
     }
-    // Libera la memoria del puntatore iniziale
-    free(piano_gioco->posizione);
-    piano_gioco->posizione = NULL;
-    // Libera la memoria della struttura dati del piano
-    free(piano_gioco);
+    printf("\n");
+}
+
+void stampa_estremi(estremo_t *estremi, size_t dimensione) {
+    // Per ciascun estremo nella struttura dati
+    for(size_t i=0; i<dimensione; i++) {
+        // In base al valore assunto dal cardine
+        switch(estremi[i].cardine) {
+            // Stampa correttamente l'estremo
+            case 1: printf(" [%d ", estremi[i].valore); // >
+                    break;
+            case 2: printf(" %d] ", estremi[i].valore); // <
+                    break;
+            case 3: printf(" {%d ", estremi[i].valore); // v
+                    break;
+            case 4: printf(" %d} ", estremi[i].valore); // ^
+                    break;
+            // Quando non e' stato memorizzato un valore stampa uno spazio vuoto
+            default: printf(" -- ");
+        }
+    }
+    // Stampa il carattere per andare a capo
+    printf("\n");
 }

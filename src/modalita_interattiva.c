@@ -1,81 +1,131 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "../lib/modalita_interattiva.h"
+#include "../lib/tessera.h"
 #include "../lib/controlli.h"
 
-void stampa_turno(mano_t *mano_giocatore, piano_t *piano_gioco) {
-    // Stampa per la prima volta le tessere della mano del giocatore
-    stampa_mano(mano_giocatore);
-    // Proseguimento della partita
+void stampa_turno(vect_t *mano_giocatore, matrice_t *piano_gioco) {
+    // Continua finche' rimangono tessere in mano e si possono effettuare delle mosse
+    while(mosse_disponibili(mano_giocatore, piano_gioco)) {
+        // Stampa il piano di gioco nello stato corrente
+        printf("Piano di gioco:\n");
+        stampa_piano(piano_gioco);
+        // Stampa le tessere presenti nella mano del giocatore
+        printf("Mano del giocatore:\n");
+        stampa_mano(mano_giocatore);
+        // Inserisci la prossima mossa da effettuare
+        inserisci_scelta(mano_giocatore, piano_gioco);
+    }
+    printf("Piano di gioco finale:\n");
     stampa_piano(piano_gioco);
-    stampa_cursori(piano_gioco);
-    coord_t temp = {1, 15};
-    coord_t precedente = temp, successivo = temp;
-    for(int i=0; i<10; i++) {
-        printf("Precedente: (%2d,%2d)\n", precedente.x, precedente.y);
-        printf("Successivo: (%2d,%2d)\n\n", successivo.x, successivo.y);
-        precedente = cursore_precedente(piano_gioco, precedente);
-        successivo = cursore_successivo(piano_gioco, successivo);
+}
+
+void inserisci_scelta(vect_t *mano_giocatore, matrice_t *piano_gioco) {
+    // Fornisci all'utente le scelte da effettuare durante il turno
+    printf(" - Premi 1 per posizionare una tessera\n");
+    printf(" - Premi 2 per ruotare una tessera\n");
+    int scelta = inserisci_numero_compreso("Seleziona un'opzione", 1, 2);
+    // In base alla scelta selezionata
+    switch (scelta) {
+        case 1: {
+            // Inserisci la tessera presente ad un determinato indice
+            seleziona_tessera(mano_giocatore, piano_gioco);
+        } break;
+        case 2: {
+            // Ruota la tessere presente ad un determinato indice
+            ruota_tessera(mano_giocatore, inserisci_indice(mano_giocatore, "ruotare"));
+        } break;
     }
 }
 
-coord_t cursore_precedente(piano_t *piano_gioco, coord_t successivo) {
-    // Partendo dalla riga della coordinata successiva
-    for(int i=successivo.x; i>=0; i--) {
-        // Scorri tutte le colonne a ritroso
-        int j;
-        // Per il primo controllo comincia dalla colonna precedente
-        if(i == successivo.x) j = successivo.y - 1;
-        // Altrimenti comincia dall'ultima colonna
-        else j = piano_gioco->colonne - 1;
-        while(j>=0) {
-            // Se ho trovato una posizione valida
-            if(posizione_valida(piano_gioco, i, j)) {
-                // Ritorno le nuove coordinate
-                return (coord_t) {i, j};
-            }
-            // Vai alla colonna precedente
-            j--;
-        }
-    }
-    // Se scorrendo il piano non ho trovato nuove posizioni ritorno quella attuale
-    return successivo;
+size_t inserisci_indice(vect_t *mano_giocatore, char *azione) {
+    // Messaggio da stampare a terminale
+    char messaggio[50] = "Inserisci l'indice della tessera da ";
+    // Inserisci un numero compreso tra 0 e l'indice dell'ultimo estremo
+    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, (mano_giocatore->dimensione / 2) - 1);
+    // Restituisci l'indice dell'estremo sinistro
+    return indice_tessera * 2;
 }
 
-coord_t cursore_successivo(piano_t *piano_gioco, coord_t precedente) {
-    // Partendo dalla riga della coordinata precedente
-    for(int i=precedente.x; i<piano_gioco->righe; i++) {
-        // Scorri tutte le colonne in avanti
-        int j;
-        // Per il primo controllo comincia dalla colonna successiva
-        if(i == precedente.x) j = precedente.y + 1;
-        // Altrimenti comincia dalla prima colonna
-        else j = 0;
-        while(j<piano_gioco->colonne - 1) {
-            // Se ho trovato una posizione valida
-            if(posizione_valida(piano_gioco, i, j)) {
-                // Ritorno le nuove coordinate
-                return (coord_t) {i, j};
-            }
-            // Vai alla colonna successiva
-            j++;
-        }
+void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco) {
+    // Trova i due estremi da prelevare dalla mano del giocatore
+    size_t indice_estremo = inserisci_indice(mano_giocatore, "posizionare");
+    // Chiedi all'utente come intende posizionare la tessera selezionata
+    bool orientamento = inserisci_numero_compreso("Come vuoi posizionare la tessera? (0 in verticale, 1 in orizzontale)", 0, 1);
+    // Per il primo inserimento valuta se posizionarla al centro
+    if(prima_posizione(piano_gioco, 0) > ultima_posizione(piano_gioco, 0)) {
+        coord_t centrale = {0, piano_gioco->colonne / 2 - 1};
+        preleva_tessera(piano_gioco, mano_giocatore, indice_estremo, &centrale, orientamento);
+        return;
     }
-    // Se scorrendo il piano non ho trovato nuove posizioni ritorno quella attuale
-    return precedente;
+    
+    // Restituisci il vettore creato dalle posizioni valide
+    estremo_t *da_posizionare = elemento_ad_indice(mano_giocatore, indice_estremo);
+    vect_t *coordinate = calcola_coordinate(piano_gioco, da_posizionare, orientamento);
+    
+    // Controlla se sia possibile effettuare almeno una mossa
+    if(coordinate->dimensione == 0) {
+        printf("Nessuna mossa disponibile con questa tessera\n");
+        return;
+    }
+    // Seleziona la coordinate dove effettuare l'inserimento
+    coord_t *coordinata = seleziona_posizione(coordinate);
+    // Preleva la tessera secondo l'orientamento indicato
+    preleva_tessera(piano_gioco, mano_giocatore, indice_estremo, coordinata, orientamento);
+    // Libera la memoria occupata
+    libera_vettore(coordinate);
 }
 
-void stampa_cursori(piano_t *piano_gioco) {
-    printf("Posizioni valide in relazione al centro:\n");
-    // Per ciascuna riga
-    for(size_t i=0; i<piano_gioco->righe; i++) {
-        // Per ciascuna colonna
-        for(size_t j=0; j<piano_gioco->colonne - 1; j++) {
-            // Trova dove e' possibile posizionare una tessera
-            if(posizione_valida(piano_gioco, i, j)) {
-                printf("(%2d,%2d)\n", i, j);
-            }
+coord_t *seleziona_posizione(vect_t *coordinate) {
+    // Stampa a schermo le nuove coordinate ottenute
+    stampa_coordinate(coordinate);
+    // Stampa il menu per indicare le possibile scelte
+    printf("Seleziona dove posizionare la tessera:\n");
+    printf(" - Premi 1 per scorrere alla posizione precedente\n");
+    printf(" - Premi 2 per scorrere alla posizione successiva\n");
+    printf(" - Premi 0 per confermare la posizione selezionata\n");
+    
+    unsigned int scelta, indice_attuale = 0;
+    coord_t *coordinata_attuale;
+    do {
+        coordinata_attuale = elemento_ad_indice(coordinate, indice_attuale);
+        printf("La posizione attuale e': (%2d,%2d)\n", coordinata_attuale->riga, coordinata_attuale->colonna);
+        scelta = inserisci_numero_compreso("Seleziona un'opzione", 0, 2);
+        switch(scelta) {
+            // Sposta la coordinata indietro
+            case 1: indice_attuale = sposta_indice(coordinate->dimensione, indice_attuale, -1);
+                    break;
+            // Sposta la coordinata avanti
+            case 2: indice_attuale = sposta_indice(coordinate->dimensione, indice_attuale, 1);
+                    break;
         }
-    }
+    } while(scelta);
+    
+    printf("Hai selezionato la posizione: (%2d,%2d)\n", coordinata_attuale->riga, coordinata_attuale->colonna);
+    
+    return elemento_ad_indice(coordinate, indice_attuale);
 }
+
+/*
+   v                      
+  ╔═╦═╦═╦═╦═╗
+  ║ ║5║6║6║ ║ 
+  ╠═╬═╬═╬═╬═╣
+> ║ ║ ║ ║1║ ║
+  ╠═╬═╬═╬═╬═╣
+  ║ ║ ║ ║ ║ ║
+  ╠═╬═╬═╬═╬═╣
+  ║ ║ ║ ║ ║ ║
+  ╠═╬═╬═╬═╬═╣
+  ║ ║ ║ ║ ║ ║
+  ╚═╩═╩═╩═╩═╝
+
+Scegli riga
+Precedente posizione libera     A
+Prossima posizione libera       D
+Inserisci la tessera corrente   'Invio'
+
+*/

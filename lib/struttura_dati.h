@@ -1,53 +1,38 @@
 #ifndef _DATI_H_
 #define _DATI_H_
 
-#include <stdio.h>
+#include "vettore.h"
 
-// Posizione del cursore dove inserire le tessere
+// Coordinate corrispondenti del piano di gioco
 typedef struct s_coord {
-    unsigned int x;
-    unsigned int y;
+    unsigned int riga;
+    unsigned int colonna;
 } coord_t;
 
-// Estremi contenuti dentro le tessere nella mano del giocatore
-typedef struct s_tessera {
-    unsigned int estremo_sinistro;
-    unsigned int estremo_destro;
-} tessera_t;
-
-typedef struct s_mano {
-    tessera_t *tessere;
-    unsigned int dimensione;
-} mano_t;
-
 // Ciascuna posizione del piano di gioco contiene un dato
-typedef struct s_dato {
-    unsigned int estremo;
-    char cardine; // Nord, Sud, Est, Ovest
-} dato_t;
+typedef struct s_estremo {
+    unsigned int valore;
+    unsigned int cardine;
+} estremo_t;
 
 // Vettore dinamico con dimensione [righe * colonne]
-typedef struct s_piano {
-    dato_t **posizione;
+typedef struct s_matrice {
+    estremo_t **posizione;
     unsigned int righe;
     unsigned int colonne;
-} piano_t;
+} matrice_t;
 
-// Creazione della struttura dati contenente la mano del giocatore
-mano_t *crea_mano(unsigned int numero_tessere);
-// Genera gli estremi delle tessera nella mano del giocatore
-void genera_tessere(mano_t *mano_giocatore);
-// Stampa in linea delle tessere nella mano del giocatore
-void stampa_mano(mano_t *mano_giocatore);
-// Libera la memoria occupata dalla mano del giocatore
-void libera_mano(mano_t *mano_giocatore);
-// Creazione della struttura dati contenente il piano di gioco
-piano_t *crea_piano(unsigned int colonne);
-// Aggiungi una nuova riga al piano di gioco
-void aggiungi_riga(piano_t *piano_gioco);
-// Stampa delle tessere presenti in ogni riga del piano di gioco
-void stampa_piano(piano_t *piano_gioco);
-// Libera la memoria occupata dal piano di gioco
-void libera_piano(piano_t *piano_gioco);
+// Creazione di una matrice contenente estremi
+matrice_t *crea_matrice(size_t colonne);
+// Aggiungi una nuova riga alla matrice
+void aggiungi_riga(matrice_t *matrice);
+// Libera la memoria occupata dalla matrice
+void libera_matrice(matrice_t *matrice);
+// Stampa gli estremi presenti in ogni riga del piano di gioco
+void stampa_piano(matrice_t *piano_gioco);
+// Stampa gli estremi presenti nella mano del giocatore
+void stampa_mano(vect_t *mano_giocatore);
+// Stampa il valore di un estremo in base al cardine
+void stampa_estremi(estremo_t *estremi, size_t dimensione);
 
 #endif
