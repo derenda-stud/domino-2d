@@ -9,8 +9,8 @@
 unsigned int inserisci_numero_tessere();
 // Chiedi all'utente un numero compreso tra un estremo minimo e massimo
 unsigned int inserisci_numero_compreso(char *messaggio, unsigned int minimo, unsigned int massimo);
-// Valuta se una posizione sul piano di gioco e' valida per l'inserimento di una tessera
-bool posizione_valida(matrice_t *piano_gioco, estremo_t *da_confrontare, coord_t coordinata, bool orientamento);
+// Valuta se una posizione sul piano di gioco permette l'inserimento di una tessera
+bool posizione_valida(matrice_t *piano_gioco, coord_t coordinata, bool orientamento);
 // Sposta l'indice delle coordinate alla posizione precedente/successiva
 unsigned int sposta_indice(size_t posizioni, unsigned int attuale, int spostamento);
 // Controlla se sia possibile aggiungere una tessera al piano di gioco

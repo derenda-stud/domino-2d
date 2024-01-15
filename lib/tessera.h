@@ -8,7 +8,7 @@
 // Genera gli estremi contenuti nella mano del giocatore
 void genera_estremi(vect_t *mano_giocatore);
 // Ritorna un vettore contenente le coordinate delle posizioni valide
-vect_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, bool orientamento);
+vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento);
 // Scorri in avanti le colonne del piano di gioco per trovare la prima posizione utile
 unsigned int prima_posizione(matrice_t *piano_gioco, unsigned int riga);
 // Scorri a ritroso le colonne del piano di gioco per trovare l'ultima posizione utile

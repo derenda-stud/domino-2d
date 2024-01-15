@@ -17,7 +17,7 @@ void genera_estremi(vect_t *mano_giocatore) {
     }
 }
 
-vect_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, bool orientamento) {
+vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento) {
     // Crea il vettore contenente le coordinate
     vect_t *coordinate = crea_vettore(sizeof(coord_t), 0);
     // Per ciascuna riga del piano di gioco
@@ -30,7 +30,7 @@ vect_t *calcola_coordinate(matrice_t *piano_gioco, estremo_t *da_confrontare, bo
             // Memorizza la coordinata attuale
             coord_t attuale = {i, j};
             // Trova dove e' possibile posizionare una tessera
-            if(posizione_valida(piano_gioco, da_confrontare, attuale, orientamento)) {
+            if(posizione_valida(piano_gioco, attuale, orientamento)) {
                 // Inserisci la nuova coordinata valida
                 inserimento_coda(coordinate, &attuale);
             }
