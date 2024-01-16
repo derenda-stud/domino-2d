@@ -39,7 +39,7 @@ bool posizione_valida(matrice_t *piano_gioco, coord_t coordinata, bool orientame
         if(piano_gioco->righe > coordinata.riga + 1 && piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine) return false;
     }
     // Controlla che abbia almeno un collegamento con l'estremo sinistro o quello destro
-    if(!piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].cardine && !piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].cardine) return false;
+    if(!piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].cardine && !piano_gioco->posizione[coordinata.riga][coordinata.colonna + orientamento + 1].cardine) return false;
     // Per tutti i casi rimanenti la posizione risulta valida
     return true;
 }
@@ -109,16 +109,16 @@ int estremi_corrispondono(estremo_t *estremo_piano, tessera_t *tessera, bool ori
     // Controlla che l'estremo sinistro sia presente
     if((estremo_piano - 1)->cardine) {
         // Quando l'estremo sinistro della tessera corrisponde mantieni l'ordine
-        if((estremo_piano - 1)->valore == tessera->estremo_sinistro) return 1;
+        if((estremo_piano - 1)->valore == tessera->sinistro) return 1;
         // Quando l'estremo destro della tessera corrisponde ruota la tessera
-        if((estremo_piano - 1)->valore == tessera->estremo_destro) return 2;
+        if((estremo_piano - 1)->valore == tessera->destro) return 2;
     }
     // Controlla che l'estremo destro sia presente
     if((estremo_piano + orientamento + 1)->cardine) {
-        // Quando l'estremo destro della tessera corrisponde mantieni l'ordine
-        if((estremo_piano + orientamento + 1)->valore == tessera->estremo_destro) return 1;
-        // Quando l'estremo sinistro della tessera corrisponde ruota la tessera
-        if((estremo_piano + orientamento + 1)->valore == tessera->estremo_sinistro) return 2;
+        // Mantieni l'ordine se in orizzontale, ruota la tessera se in verticale
+        if((estremo_piano + orientamento + 1)->valore == tessera->destro) return 1 + !orientamento;
+        // Mantieni l'ordine se in verticale, ruota la tessera se in orizzontale
+        if((estremo_piano + orientamento + 1)->valore == tessera->sinistro) return 1 + orientamento;
     }
     // Non ho trovato nessuna corrispondenza
     return 0;
@@ -130,10 +130,15 @@ struct tessera {
     estremo_t destro;   <- cardine: 2
 }
 
+tessera_t tessera = elemento_ad_indice(mano_giocatore, i);
+tessera->sinistro->valore;
+
 struct tessera {
-    unsigned int estremo_sinistro;
-    unsigned int estremo_destro;
+    unsigned int sinistro;
+    unsigned int destro;
 }
+
+tessera->sinistro;
 
 In fase di inserimento:
     - orizzontale:  imposta cardini a 1 e 2

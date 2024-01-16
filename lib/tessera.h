@@ -17,12 +17,8 @@ unsigned int ultima_posizione(matrice_t *piano_gioco, unsigned int riga);
 void stampa_coordinate(vect_t *coordinate);
 // Preleva una tessera dalla mano del giocatore e inseriscila nel piano di gioco seguendo le indicazioni
 void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, size_t indice, coord_t *coordinata, bool orientamento);
-// Inserisci in orizzontale una tessera presente nella mano del giocatore sul piano di gioco
-void inserimento_orizzontale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t *coordinata);
-// Inserisci in verticale una tessera presente nella mano del giocatore sul piano di gioco
-void inserimento_verticale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t *coordinata);
-// Incrementa il valore dei cardini perche' corrispondano agli estremi posizionati in verticale
-void incrementa_cardini(matrice_t *piano_gioco, coord_t *coordinata);
+// Imposta i cardini delle due posizioni da riempire secondo l'orientamento stabilito
+void imposta_cardini(matrice_t *piano_gioco, coord_t *coordinata, bool orientamento);
 // Ruota la tessera presente ad un determinato indice
 void ruota_tessera(vect_t *mano_giocatore, size_t indice);
 

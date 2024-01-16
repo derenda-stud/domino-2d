@@ -15,6 +15,12 @@ typedef struct s_estremo {
     unsigned int cardine;
 } estremo_t;
 
+// Tessere contenute nella mano del giocatore
+typedef struct s_tessera {
+    unsigned int sinistro;
+    unsigned int destro;
+} tessera_t;
+
 // Vettore dinamico con dimensione [righe * colonne]
 typedef struct s_matrice {
     estremo_t **posizione;

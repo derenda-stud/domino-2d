@@ -7,13 +7,12 @@ void genera_estremi(vect_t *mano_giocatore) {
     // Per ciascuna posizione disponibile nella mano del giocatore
     for(size_t i=0; i<mano_giocatore->capacita; i++) {
         // Crea un estremo temporaneo da copiare dentro la mano
-        estremo_t estremo_attuale;
+        tessera_t tessera_attuale;
         // Genera casualmente i valori contenuti nell'estremo
-        estremo_attuale.valore = rand() % 6 + 1;
-        // Collega i due estremi memorizzando i loro cardini
-        estremo_attuale.cardine = 1 + (i % 2);
+        tessera_attuale.sinistro = rand() % 6 + 1;
+        tessera_attuale.destro = rand() % 6 + 1;
         // Inserisci l'estremo dentro la mano del giocatore
-        inserimento_coda(mano_giocatore, &estremo_attuale);
+        inserimento_coda(mano_giocatore, &tessera_attuale);
     }
 }
 
@@ -69,46 +68,28 @@ void stampa_coordinate(vect_t *coordinate) {
 }
 
 void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, size_t indice, coord_t *coordinata, bool orientamento) {
-    // Inserisci la tessera selezionata sul piano di gioco
-    if(orientamento) {
-        inserimento_orizzontale(piano_gioco, elemento_ad_indice(mano_giocatore, indice), coordinata);
-    } else {
-        inserimento_verticale(piano_gioco, elemento_ad_indice(mano_giocatore, indice), coordinata);
-    }
-    // Rimuovi i due estremi posizionati dalla mano del giocatore
-    for(size_t i=0; i<2; i++) {
-        rimuovi_ad_indice(mano_giocatore, indice);
-    }
-}
-
-void inserimento_orizzontale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t *coordinata) {
-    // Memorizza l'estremo sinistro nella posizione corrente
-    piano_gioco->posizione[coordinata->riga][coordinata->colonna] = *estremo_sinistro;
-    // Memorizza l'estremo destro nella posizione adiacente
-    piano_gioco->posizione[coordinata->riga][coordinata->colonna + 1] = *(estremo_sinistro + 1);
-}
-
-void inserimento_verticale(matrice_t *piano_gioco, estremo_t *estremo_sinistro, coord_t *coordinata) {
     // Controlla se sia necessario aggiungere una nuova riga
-    if(coordinata->riga + 1 >= piano_gioco->righe) aggiungi_riga(piano_gioco);
+    if(!orientamento && coordinata->riga + 1 >= piano_gioco->righe) aggiungi_riga(piano_gioco);
+    // Inserisci la tessera selezionata sul piano di gioco
+    tessera_t *tessera = elemento_ad_indice(mano_giocatore, indice);
     // Memorizza l'estremo sinistro nella posizione corrente
-    piano_gioco->posizione[coordinata->riga][coordinata->colonna] = *estremo_sinistro;
-    // Memorizza l'estremo destro nella posizione sottostante
-    piano_gioco->posizione[coordinata->riga + 1][coordinata->colonna] = *(estremo_sinistro + 1);
-    // Incrementa l'orientamento dei cardini
-    incrementa_cardini(piano_gioco, coordinata);
+    piano_gioco->posizione[coordinata->riga][coordinata->colonna].valore = tessera->sinistro;
+    // Memorizza l'estremo destro nella posizione successiva/sottostante
+    piano_gioco->posizione[coordinata->riga + !orientamento][coordinata->colonna + orientamento].valore = tessera->destro;
+    // Imposta i cardini delle due posizioni da occupare
+    imposta_cardini(piano_gioco, coordinata, orientamento);
+    // Rimuovi la tessera prelevata dalla mano del giocatore
+    rimuovi_ad_indice(mano_giocatore, indice);
 }
 
-void incrementa_cardini(matrice_t *piano_gioco, coord_t *coordinata) {
-    piano_gioco->posizione[coordinata->riga][coordinata->colonna].cardine += 2;
-    piano_gioco->posizione[coordinata->riga + 1][coordinata->colonna].cardine += 2;
+void imposta_cardini(matrice_t *piano_gioco, coord_t *coordinata, bool orientamento) {
+    piano_gioco->posizione[coordinata->riga][coordinata->colonna].cardine = 1 + (!orientamento * 2);
+    piano_gioco->posizione[coordinata->riga + !orientamento][coordinata->colonna + orientamento].cardine = 2 + (!orientamento * 2);
 }
 
 void ruota_tessera(vect_t *mano_giocatore, size_t indice) {
-    // Preleva il primo estremo alla posizione indicata
-    estremo_t *sinistro = elemento_ad_indice(mano_giocatore, indice);
-    // Effettua lo scambio del valore dei due estremi
-    unsigned int valore_temporaneo = sinistro->valore;
-    sinistro->valore = (sinistro + 1)->valore;
-    (sinistro + 1)->valore = valore_temporaneo;
+    tessera_t *tessera = elemento_ad_indice(mano_giocatore, indice);
+    unsigned int temp = tessera->destro;
+    tessera->destro = tessera->sinistro;
+    tessera->sinistro = temp;
 }
