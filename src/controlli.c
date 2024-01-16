@@ -70,52 +70,72 @@ bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     // Continua la partita se non sono ancora state posizionate tessere
     if(prima_posizione(piano_gioco, 0) > ultima_posizione(piano_gioco, 0)) return true;
     // Confronta gli inserimenti in verticale ed orizzontale
-    for(size_t orientamento = 0; orientamento <= 1; orientamento++) {
-        /*
-        
-                         0  1  2  3  4  5  6  7  8
-        Piano di gioco: .. .. [6 3] {3 .. .. .. ..
-                        .. .. .. .. 2} [2 5] .. ..
-        
-        Mosse disponibili:  posizioni_libere() ... estremi_corrispondono() -> true
-        libere orizzontali: (r0,0), (r0, 5), (r1, 2), (r1, 5)
-        libere verticali  : (r0,1), (r1, 3),          (r1, 5)
-        Algoritmo AI:       posizioni_libere() ... estremi_corrispondono() -> risultato di estremi_corrispondo
-        
-        struct tessera {
-            estremo_t sinistro; <- cardine: 1
-            estremo_t destro;   <- cardine: 2
-        }
-        
-        struct tessera {
-            unsigned sinistro;
-            unsigned destro;
-        }
-        
-        */
+    for(int orientamento = 0; orientamento <= 1; orientamento++) {
+        // Calcola tutte le coordinate che presentano posizioni valide
         vect_t *coordinate = calcola_coordinate(piano_gioco, orientamento);
-        // Per ciascun estremo nella mano del giocatore
-        for(size_t estremo = 0; estremo < mano_giocatore->dimensione; estremo += 2) {
-            // Per ciascuna coordinata con posizione valida
-            for(size_t coordinata = 0; coordinata < coordinate->dimensione; coordinata++) {
-                coord_t *attuale = elemento_ad_indice(coordinate, coordinata);
-                estremo_t *sinistro = elemento_ad_indice(mano_giocatore, estremo);
-                if(estremi_corrispondono(piano_gioco->posizione[attuale->riga][attuale->colonna - 1], sinistro, sinistro + 1) ||
-                estremi_corrispondono(piano_gioco->posizione[attuale->riga][attuale->colonna + orientamento + 1], sinistro + 1, sinistro)) {
-                    libera_vettore(coordinate);
-                    return true;
-                }
+        // Per ciascuna tessera nella mano del giocatore
+        for(size_t tessera = 0; tessera < mano_giocatore->dimensione; tessera++) {
+            // Controlla che possa essere posizionata in una delle coordinate
+            if(mossa_legale(piano_gioco->posizione, coordinate, elemento_ad_indice(mano_giocatore, tessera), orientamento)) {
+                // Prima di terminare la funzione libera la memoria allocata
+                libera_vettore(coordinate);
+                // Ho trovato una mossa legale
+                return true;
             }
         }
+        // Libera la memoria prima di passare al prossimo ciclo
         libera_vettore(coordinate);
     }
-    // Non ho trovato nessuna mossa legale
+    // Non ci sono mosse disponibili
     return false;
 }
 
-int estremi_corrispondono(estremo_t estremo_piano, estremo_t *primo, estremo_t *secondo) {
-    if(!estremo_piano.cardine) return 0;
-    if(estremo_piano.valore == primo->valore) return 1;
-    if(estremo_piano.valore == secondo->valore) return 2;
+int mossa_legale(estremo_t **posizione, vect_t *coordinate, tessera_t *tessera, bool orientamento) {
+    int corrispondenza;
+    // Per ciascuna coordinata con posizione valida
+    for(size_t i = 0; i < coordinate->dimensione; i++) {
+        coord_t *coordinata = elemento_ad_indice(coordinate, i);
+        estremo_t *estremo_piano = &posizione[coordinata->riga][coordinata->colonna];
+        // Valuta se almeno uno dei due estremi adiacenti ha una corrispondenza
+        if((corrispondenza = estremi_corrispondono(estremo_piano, tessera, orientamento)) != 0) {
+            return corrispondenza;
+        }
+    }
+    // Non ho trovato nessuna mossa legale
     return 0;
 }
+
+int estremi_corrispondono(estremo_t *estremo_piano, tessera_t *tessera, bool orientamento) {
+    // Controlla che l'estremo sinistro sia presente
+    if((estremo_piano - 1)->cardine) {
+        // Quando l'estremo sinistro della tessera corrisponde mantieni l'ordine
+        if((estremo_piano - 1)->valore == tessera->estremo_sinistro) return 1;
+        // Quando l'estremo destro della tessera corrisponde ruota la tessera
+        if((estremo_piano - 1)->valore == tessera->estremo_destro) return 2;
+    }
+    // Controlla che l'estremo destro sia presente
+    if((estremo_piano + orientamento + 1)->cardine) {
+        // Quando l'estremo destro della tessera corrisponde mantieni l'ordine
+        if((estremo_piano + orientamento + 1)->valore == tessera->estremo_destro) return 1;
+        // Quando l'estremo sinistro della tessera corrisponde ruota la tessera
+        if((estremo_piano + orientamento + 1)->valore == tessera->estremo_sinistro) return 2;
+    }
+    // Non ho trovato nessuna corrispondenza
+    return 0;
+}
+
+/*
+struct tessera {
+    estremo_t sinistro; <- cardine: 1
+    estremo_t destro;   <- cardine: 2
+}
+
+struct tessera {
+    unsigned int estremo_sinistro;
+    unsigned int estremo_destro;
+}
+
+In fase di inserimento:
+    - orizzontale:  imposta cardini a 1 e 2
+    - verticale:    imposta cardini a 3 e 4 
+*/
