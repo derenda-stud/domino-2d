@@ -65,7 +65,7 @@ void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     vect_t *coordinate = calcola_coordinate(piano_gioco, orientamento);
     // Seleziona la coordinate dove effettuare l'inserimento
     coord_t *coordinata = seleziona_posizione(coordinate);
-    
+
     // if(estremi_corrispondono(piano_gioco, coordinata, tessera, orientamento))
     if(estremi_corrispondono(&piano_gioco->posizione[coordinata->riga][coordinata->colonna], elemento_ad_indice(mano_giocatore, indice_tessera), orientamento) != 1) {
         printf("Mossa non valida :c, riprova con un altra tessera\n");
@@ -85,10 +85,11 @@ coord_t *seleziona_posizione(vect_t *coordinate) {
     printf(" - Premi 1 per scorrere alla posizione precedente\n");
     printf(" - Premi 2 per scorrere alla posizione successiva\n");
     printf(" - Premi 0 per confermare la posizione selezionata\n");
-    
+    // Scorri le coordinate finche' non viene selezionata quella da posizionare
     unsigned int scelta, indice_attuale = 0;
     coord_t *coordinata_attuale;
     do {
+        // Recupera la coordinata presente all'indice selezionato
         coordinata_attuale = elemento_ad_indice(coordinate, indice_attuale);
         printf("La posizione attuale e': (%2d,%2d)\n", coordinata_attuale->riga, coordinata_attuale->colonna);
         scelta = inserisci_numero_compreso("Seleziona un'opzione", 0, 2);
@@ -101,25 +102,23 @@ coord_t *seleziona_posizione(vect_t *coordinate) {
                     break;
         }
     } while(scelta);
-    
-    printf("Hai selezionato la posizione: (%2d,%2d)\n", coordinata_attuale->riga, coordinata_attuale->colonna);
-    
+    // Ritorna la coordinata dopo aver confermato la selezione
     return elemento_ad_indice(coordinate, indice_attuale);
 }
 
 /*
-   v                      
-  ╔═╦═╦═╦═╦═╗
-  ║ ║5║6║6║ ║ 
-  ╠═╬═╬═╬═╬═╣
-> ║ ║ ║ ║1║ ║
-  ╠═╬═╬═╬═╬═╣
-  ║ ║ ║ ║ ║ ║
-  ╠═╬═╬═╬═╬═╣
-  ║ ║ ║ ║ ║ ║
-  ╠═╬═╬═╬═╬═╣
-  ║ ║ ║ ║ ║ ║
-  ╚═╩═╩═╩═╩═╝
+   v              
+  ╔══╦══╦══╦══╦══╗
+  ║  ║[5║6]║{6║  ║ 
+  ╠══╬══╬══╬══╬══╣
+> ║  ║  ║{1║1}║  ║
+  ╠══╬══╬══╬══╬══╣
+  ║  ║{4║4}║  ║  ║
+  ╠══╬══╬══╬══╬══╣
+  ║  ║3}║[3║2]║  ║
+  ╠══╬══╬══╬══╬══╣
+  ║  ║  ║  ║  ║  ║
+  ╚══╩══╩══╩══╩══╝
 
 Scegli riga
 Precedente posizione libera     A

@@ -40,20 +40,28 @@ vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento) {
 }
 
 unsigned int prima_posizione(matrice_t *piano_gioco, unsigned int riga) {
+    // Per ciascuna colonna fino a raggiungere il limite sinistro
     for(size_t j=0; j<piano_gioco->colonne - 2; j++) {
+        // Controlla che ci sia una posizione occupata
         if(piano_gioco->posizione[riga][j].cardine) {
+            // Ritorna la colonna precedente libera
             return j - 1;
         }
     }
-    return piano_gioco->colonne;
+    // Non avendo trovato colonne, ritorno l'ultima
+    return piano_gioco->colonne - 1;
 }
 
 unsigned int ultima_posizione(matrice_t *piano_gioco, unsigned int riga) {
+    // Dal limite sinistro fino alla prima colonna valida
     for(size_t j=piano_gioco->colonne - 2; j>=0; j--) {
+        // Controlla che ci sia una posizione occupata
         if(piano_gioco->posizione[riga][j].cardine) {
+            // Ritorna la colonna successiva libera
             return j + 1;
         }
     }
+    // Non avendo trovato colonne, ritorno la prima
     return 0;
 }
 
@@ -83,12 +91,15 @@ void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, size_t indi
 }
 
 void imposta_cardini(matrice_t *piano_gioco, coord_t *coordinata, bool orientamento) {
+    // Il valore dei cardini corrisponde ad 1 e 2 per l'inserimento orizzontale, 3 e 4 in verticale
     piano_gioco->posizione[coordinata->riga][coordinata->colonna].cardine = 1 + (!orientamento * 2);
     piano_gioco->posizione[coordinata->riga + !orientamento][coordinata->colonna + orientamento].cardine = 2 + (!orientamento * 2);
 }
 
 void ruota_tessera(vect_t *mano_giocatore, size_t indice) {
+    // Recupera la tessera presente all'indice selezionato
     tessera_t *tessera = elemento_ad_indice(mano_giocatore, indice);
+    // Esegui lo scambio di due variabili
     unsigned int temp = tessera->destro;
     tessera->destro = tessera->sinistro;
     tessera->sinistro = temp;

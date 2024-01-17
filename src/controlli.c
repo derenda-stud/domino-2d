@@ -38,7 +38,7 @@ bool posizione_valida(matrice_t *piano_gioco, coord_t coordinata, bool orientame
         // Controlla di rientrare nella riga e che la posizione sottostante sia libera
         if(piano_gioco->righe > coordinata.riga + 1 && piano_gioco->posizione[coordinata.riga + 1][coordinata.colonna].cardine) return false;
     }
-    // Controlla che abbia almeno un collegamento con l'estremo sinistro o quello destro
+    // Controlla che abbia almeno un collegamento tra l'estremo sinistro e quello destro
     if(!piano_gioco->posizione[coordinata.riga][coordinata.colonna - 1].cardine && !piano_gioco->posizione[coordinata.riga][coordinata.colonna + orientamento + 1].cardine) return false;
     // Per tutti i casi rimanenti la posizione risulta valida
     return true;
@@ -49,15 +49,11 @@ bool posizione_valida(matrice_t *piano_gioco, coord_t coordinata, bool orientame
   0  --  --  --  --  --  --  --  --  --  --  --  --  --  {5  [5  1]  [1  6]  {6  --  --  --  --  --  --  --  --  --  --  --
   1  --  --  --  --  --  --  --  --  --  --  --  [4  6]  6}  {6  --  --  --  2}  {3  --  --  --  --  --  --  --  --  --  --
   2  --  --  --  --  --  --  --  --  --  --  --  --  --  --  3}  --  --  --  --  2}  --  --  --  --  --  --  --  --  --  --
-  
-    if(valore sinistro non coincide) false;
-    if(valore destro non coincide) false;
-    per tutti gli altri casi -> true;
 */
 
-unsigned int sposta_indice(size_t posizioni, unsigned int attuale, int spostamento) {
+unsigned int sposta_indice(size_t dimensione, unsigned int attuale, int spostamento) {
     // Controlla che il nuovo indice rientri nelle dimensioni dell'array
-    if(attuale + spostamento < 0 || attuale + spostamento > posizioni - 1)
+    if(attuale + spostamento < 0 || attuale + spostamento > dimensione - 1)
         // Mantieni il valore dell'indice
         return attuale;
     // Modifica l'indice attuale in base allo spostamento
@@ -123,24 +119,3 @@ int estremi_corrispondono(estremo_t *estremo_piano, tessera_t *tessera, bool ori
     // Non ho trovato nessuna corrispondenza
     return 0;
 }
-
-/*
-struct tessera {
-    estremo_t sinistro; <- cardine: 1
-    estremo_t destro;   <- cardine: 2
-}
-
-tessera_t tessera = elemento_ad_indice(mano_giocatore, i);
-tessera->sinistro->valore;
-
-struct tessera {
-    unsigned int sinistro;
-    unsigned int destro;
-}
-
-tessera->sinistro;
-
-In fase di inserimento:
-    - orizzontale:  imposta cardini a 1 e 2
-    - verticale:    imposta cardini a 3 e 4 
-*/
