@@ -61,14 +61,14 @@ void stampa_piano(matrice_t *piano_gioco) {
 
 void stampa_mano(vect_t *mano_giocatore) {
     // Stampa le tessere contenuti nella mano del giocatore
-    for(size_t i = 0; i < mano_giocatore->dimensione; i++){
+    for(size_t i=0; i<mano_giocatore->dimensione; i++){
         tessera_t *tessera = elemento_ad_indice(mano_giocatore, i);
-        printf(" [%d  %d] ", tessera->sinistro, tessera->destro);
+        printf(" [%2d|%2d] ", tessera->sinistro, tessera->destro);
     }
     printf("\n");
     // Stampa gli indici sotto ciascuna tessera
     for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        printf("   %2d   ", i);
+        printf("   %2d    ", i);
     }
     printf("\n");
 }

@@ -5,8 +5,8 @@
 
 #include "struttura_dati.h"
 
-// Genera gli estremi contenuti nella mano del giocatore
-void genera_estremi(vect_t *mano_giocatore);
+// Genera le tessere contenute nella mano del giocatore
+void genera_tessere(vect_t *mano_giocatore);
 // Ritorna un vettore contenente le coordinate delle posizioni valide
 vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento);
 // Scorri in avanti le colonne del piano di gioco per trovare la prima posizione utile

@@ -3,16 +3,27 @@
 #include "../lib/tessera.h"
 #include "../lib/controlli.h"
 
-void genera_estremi(vect_t *mano_giocatore) {
-    // Per ciascuna posizione disponibile nella mano del giocatore
-    for(size_t i=0; i<mano_giocatore->capacita; i++) {
-        // Crea un estremo temporaneo da copiare dentro la mano
+void genera_tessere(vect_t *mano_giocatore) {
+    // Calcola la percentuale di tessere speciali
+    int dimensione_speciali = mano_giocatore->capacita / 4;
+    // Per le posizioni in cui inserire tessere normali
+    for(size_t i=0; i<mano_giocatore->capacita - dimensione_speciali; i++) {
+        // Crea una tessera temporanea da copiare dentro la mano
         tessera_t tessera_attuale;
-        // Genera casualmente i valori contenuti nell'estremo
+        // Genera casualmente i valori contenuti nella tessera
         tessera_attuale.sinistro = rand() % 6 + 1;
         tessera_attuale.destro = rand() % 6 + 1;
-        // Inserisci l'estremo dentro la mano del giocatore
+        // Inserisci la tessera dentro la mano del giocatore
         inserimento_coda(mano_giocatore, &tessera_attuale);
+    }
+    // Struttura contenente le diverse tessere speciali
+    tessera_t tessere_speciali[3] = {{0, 0}, {11, 11}, {12, 21}};
+    // Per le posizioni rimanenti nella mano del giocatore
+    for(size_t i=0; i<dimensione_speciali; i++) {
+        // Seleziona casualmente una delle tessere speciali
+        tessera_t speciale = tessere_speciali[rand() % 3];
+        // Inserisci la tessera speciale generata nella mano
+        inserimento_coda(mano_giocatore, &speciale);
     }
 }
 
