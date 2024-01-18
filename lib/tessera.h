@@ -16,10 +16,10 @@ unsigned int ultima_posizione(matrice_t *piano_gioco, unsigned int riga);
 // Stampa riga e colonna di ciascuna coordinata
 void stampa_coordinate(vect_t *coordinate);
 // Preleva una tessera dalla mano del giocatore e inseriscila nel piano di gioco seguendo le indicazioni
-void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, size_t indice, coord_t *coordinata, bool orientamento);
+void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, tessera_t *tessera, coord_t *coordinata, bool orientamento);
 // Imposta i cardini delle due posizioni da riempire secondo l'orientamento stabilito
 void imposta_cardini(matrice_t *piano_gioco, coord_t *coordinata, bool orientamento);
-// Ruota la tessera presente ad un determinato indice
-void ruota_tessera(vect_t *mano_giocatore, size_t indice);
+// Ruota la tessera invertendo il valore dei suoi estremi
+void ruota_tessera(tessera_t *tessera);
 
 #endif

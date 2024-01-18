@@ -36,43 +36,48 @@ void inserisci_scelta(vect_t *mano_giocatore, matrice_t *piano_gioco) {
         } break;
         case 2: {
             // Ruota la tessere presente ad un determinato indice
-            ruota_tessera(mano_giocatore, inserisci_indice(mano_giocatore, "ruotare"));
+            ruota_tessera(inserisci_indice(mano_giocatore, "ruotare"));
         } break;
     }
 }
 
-size_t inserisci_indice(vect_t *mano_giocatore, char *azione) {
+tessera_t *inserisci_indice(vect_t *mano_giocatore, char *azione) {
     // Messaggio da stampare a terminale
     char messaggio[50] = "Inserisci l'indice della tessera da ";
     // Inserisci un numero compreso tra 0 e l'indice dell'ultimo estremo
     int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, mano_giocatore->dimensione - 1);
     // Restituisci l'indice dell'estremo sinistro
-    return indice_tessera;
+    return elemento_ad_indice(mano_giocatore, indice_tessera);
 }
 
 void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco) {
-    // Trova i due estremi da prelevare dalla mano del giocatore
-    size_t indice_tessera = inserisci_indice(mano_giocatore, "posizionare");
+    // Memorizza l'indirizzo della tessera all'indice selezionato dall'utente
+    tessera_t *tessera = inserisci_indice(mano_giocatore, "posizionare");
     // Chiedi all'utente come intende posizionare la tessera selezionata
     bool orientamento = inserisci_numero_compreso("Come vuoi posizionare la tessera? (0 in verticale, 1 in orizzontale)", 0, 1);
     // Per il primo inserimento valuta se posizionarla al centro
     if(prima_posizione(piano_gioco, 0) > ultima_posizione(piano_gioco, 0)) {
+        // Controlla che la tessera selezionata non corrisponda alle [11|11] e [12|21]
+        if(tessera->speciale && tessera->sinistro != 0) {
+            printf("Mossa non valida, riprova con un altra tessera\n");
+            return;
+        }
+        // Posiziona la tessera al centro del piano di gioco
         coord_t centrale = {0, piano_gioco->colonne / 2 - 1};
-        preleva_tessera(piano_gioco, mano_giocatore, indice_tessera, &centrale, orientamento);
+        preleva_tessera(piano_gioco, mano_giocatore, tessera, &centrale, orientamento);
         return;
     }
     // Restituisci il vettore creato dalle posizioni valide
     vect_t *coordinate = calcola_coordinate(piano_gioco, orientamento);
     // Seleziona la coordinate dove effettuare l'inserimento
     coord_t *coordinata = seleziona_posizione(coordinate);
-
-    // if(estremi_corrispondono(piano_gioco, coordinata, tessera, orientamento))
-    if(estremi_corrispondono(&piano_gioco->posizione[coordinata->riga][coordinata->colonna], elemento_ad_indice(mano_giocatore, indice_tessera), orientamento) != 1) {
-        printf("Mossa non valida :c, riprova con un altra tessera\n");
+    // Controlla che gli estremi della tessera selezionata corrispondano con quelli sul piano
+    if(estremi_corrispondono(piano_gioco, coordinata, tessera, orientamento) != 1) {
+        printf("Mossa non valida, riprova con un altra tessera\n");
         return;
     }
-    // Preleva la tessera secondo l'orientamento indicato
-    preleva_tessera(piano_gioco, mano_giocatore, indice_tessera, coordinata, orientamento);
+    // Preleva la tessera secondo la posizione e l'orientamento indicato
+    preleva_tessera(piano_gioco, mano_giocatore, tessera, coordinata, orientamento);
     // Libera la memoria occupata
     libera_vettore(coordinate);
 }

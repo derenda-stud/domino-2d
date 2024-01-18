@@ -16,8 +16,8 @@ unsigned int sposta_indice(size_t dimensione, unsigned int attuale, int spostame
 // Controlla se sia possibile aggiungere una tessera al piano di gioco
 bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco);
 // Controlla che esista una mossa legale tra le posizioni valide
-int mossa_legale(estremo_t **posizione, vect_t *coordinate, tessera_t *tessera, bool orientamento);
+int mossa_legale(matrice_t *piano_gioco, vect_t *coordinate, tessera_t *tessera, bool orientamento);
 // Controlla se la tessera da posizionare abbia almeno un estremo con una corrispondenza
-int estremi_corrispondono(estremo_t *estremo_piano, tessera_t *tessera, bool orientamento);
+int estremi_corrispondono(matrice_t *piano_gioco, coord_t *coordinata, tessera_t *tessera, bool orientamento);
 
 #endif

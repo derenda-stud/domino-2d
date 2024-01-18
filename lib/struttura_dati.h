@@ -2,6 +2,7 @@
 #define _DATI_H_
 
 #include "vettore.h"
+#include <stdbool.h>
 
 // Coordinate corrispondenti del piano di gioco
 typedef struct s_coord {
@@ -19,6 +20,7 @@ typedef struct s_estremo {
 typedef struct s_tessera {
     unsigned int sinistro;
     unsigned int destro;
+    bool speciale;
 } tessera_t;
 
 // Vettore dinamico con dimensione [righe * colonne]

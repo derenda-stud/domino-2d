@@ -13,11 +13,12 @@ void genera_tessere(vect_t *mano_giocatore) {
         // Genera casualmente i valori contenuti nella tessera
         tessera_attuale.sinistro = rand() % 6 + 1;
         tessera_attuale.destro = rand() % 6 + 1;
+        tessera_attuale.speciale = false;
         // Inserisci la tessera dentro la mano del giocatore
         inserimento_coda(mano_giocatore, &tessera_attuale);
     }
     // Struttura contenente le diverse tessere speciali
-    tessera_t tessere_speciali[3] = {{0, 0}, {11, 11}, {12, 21}};
+    tessera_t tessere_speciali[3] = {{0, 0, true}, {11, 11, true}, {12, 21, true}};
     // Per le posizioni rimanenti nella mano del giocatore
     for(size_t i=0; i<dimensione_speciali; i++) {
         // Seleziona casualmente una delle tessere speciali
@@ -86,11 +87,9 @@ void stampa_coordinate(vect_t *coordinate) {
     }
 }
 
-void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, size_t indice, coord_t *coordinata, bool orientamento) {
+void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, tessera_t *tessera, coord_t *coordinata, bool orientamento) {
     // Controlla se sia necessario aggiungere una nuova riga
     if(!orientamento && coordinata->riga + 1 >= piano_gioco->righe) aggiungi_riga(piano_gioco);
-    // Inserisci la tessera selezionata sul piano di gioco
-    tessera_t *tessera = elemento_ad_indice(mano_giocatore, indice);
     // Memorizza l'estremo sinistro nella posizione corrente
     piano_gioco->posizione[coordinata->riga][coordinata->colonna].valore = tessera->sinistro;
     // Memorizza l'estremo destro nella posizione successiva/sottostante
@@ -98,7 +97,7 @@ void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, size_t indi
     // Imposta i cardini delle due posizioni da occupare
     imposta_cardini(piano_gioco, coordinata, orientamento);
     // Rimuovi la tessera prelevata dalla mano del giocatore
-    rimuovi_ad_indice(mano_giocatore, indice);
+    rimuovi_elemento(mano_giocatore, tessera);
 }
 
 void imposta_cardini(matrice_t *piano_gioco, coord_t *coordinata, bool orientamento) {
@@ -107,9 +106,7 @@ void imposta_cardini(matrice_t *piano_gioco, coord_t *coordinata, bool orientame
     piano_gioco->posizione[coordinata->riga + !orientamento][coordinata->colonna + orientamento].cardine = 2 + (!orientamento * 2);
 }
 
-void ruota_tessera(vect_t *mano_giocatore, size_t indice) {
-    // Recupera la tessera presente all'indice selezionato
-    tessera_t *tessera = elemento_ad_indice(mano_giocatore, indice);
+void ruota_tessera(tessera_t *tessera) {
     // Esegui lo scambio di due variabili
     unsigned int temp = tessera->destro;
     tessera->destro = tessera->sinistro;

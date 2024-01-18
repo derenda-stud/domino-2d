@@ -72,7 +72,7 @@ bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco) {
         // Per ciascuna tessera nella mano del giocatore
         for(size_t tessera = 0; tessera < mano_giocatore->dimensione; tessera++) {
             // Controlla che possa essere posizionata in una delle coordinate
-            if(mossa_legale(piano_gioco->posizione, coordinate, elemento_ad_indice(mano_giocatore, tessera), orientamento)) {
+            if(mossa_legale(piano_gioco, coordinate, elemento_ad_indice(mano_giocatore, tessera), orientamento)) {
                 // Prima di terminare la funzione libera la memoria allocata
                 libera_vettore(coordinate);
                 // Ho trovato una mossa legale
@@ -86,14 +86,13 @@ bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     return false;
 }
 
-int mossa_legale(estremo_t **posizione, vect_t *coordinate, tessera_t *tessera, bool orientamento) {
+int mossa_legale(matrice_t *piano_gioco, vect_t *coordinate, tessera_t *tessera, bool orientamento) {
     int corrispondenza;
     // Per ciascuna coordinata con posizione valida
     for(size_t i = 0; i < coordinate->dimensione; i++) {
         coord_t *coordinata = elemento_ad_indice(coordinate, i);
-        estremo_t *estremo_piano = &posizione[coordinata->riga][coordinata->colonna];
         // Valuta se almeno uno dei due estremi adiacenti ha una corrispondenza
-        if((corrispondenza = estremi_corrispondono(estremo_piano, tessera, orientamento)) != 0) {
+        if((corrispondenza = estremi_corrispondono(piano_gioco, coordinata, tessera, orientamento)) != 0) {
             return corrispondenza;
         }
     }
@@ -101,9 +100,13 @@ int mossa_legale(estremo_t **posizione, vect_t *coordinate, tessera_t *tessera, 
     return 0;
 }
 
-int estremi_corrispondono(estremo_t *estremo_piano, tessera_t *tessera, bool orientamento) {
+int estremi_corrispondono(matrice_t *piano_gioco, coord_t *coordinata, tessera_t *tessera, bool orientamento) {
+    // Calcola l'indirizzo dell'estremo del piano in base alla posizione fornita
+    estremo_t *estremo_piano = &piano_gioco->posizione[coordinata->riga][coordinata->colonna];
     // Controlla che l'estremo sinistro sia presente
     if((estremo_piano - 1)->cardine) {
+        // Controlla se l'estremo sinistro corrisponda alla speciale [0|0]
+        if((estremo_piano - 1)->valore == 0) return 1;
         // Quando l'estremo sinistro della tessera corrisponde mantieni l'ordine
         if((estremo_piano - 1)->valore == tessera->sinistro) return 1;
         // Quando l'estremo destro della tessera corrisponde ruota la tessera
@@ -111,6 +114,8 @@ int estremi_corrispondono(estremo_t *estremo_piano, tessera_t *tessera, bool ori
     }
     // Controlla che l'estremo destro sia presente
     if((estremo_piano + orientamento + 1)->cardine) {
+        // Controlla se l'estremo destro corrisponda alla speciale [0|0]
+        if((estremo_piano + orientamento + 1)->valore == 0) return 1;
         // Mantieni l'ordine se in orizzontale, ruota la tessera se in verticale
         if((estremo_piano + orientamento + 1)->valore == tessera->destro) return 1 + !orientamento;
         // Mantieni l'ordine se in verticale, ruota la tessera se in orizzontale
