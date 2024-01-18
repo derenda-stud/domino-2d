@@ -25,11 +25,26 @@ int main() {
     // Generazione delle tessere nella mano del giocatore
     genera_tessere(mano_giocatore);
     // Funzione per il proseguimento del gioco
-    esegui_algoritmo(piano_gioco, mano_giocatore);
-    // stampa_turno(mano_giocatore, piano_gioco);
+    // esegui_algoritmo(piano_gioco, mano_giocatore);
+    stampa_turno(mano_giocatore, piano_gioco);
     // Libera la memoria occupata
     libera_vettore(mano_giocatore);
     libera_matrice(piano_gioco);
     // Terminazione del programma
     return 0;
 }
+
+/*
+
+Prima della partita -> Inserisci numero tessere
+
+Premi 1 per interattiva
+Premi 2 per algoritmo AI
+Premi 0 per uscire
+
+Dopo ogni partita -> Calcola punteggio e libera memoria
+
+* Stampa tra prima ed ultima posizione
+* Documentazione Doxygen
+
+*/

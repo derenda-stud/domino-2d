@@ -30,7 +30,6 @@ void esegui_algoritmo(matrice_t *piano_gioco, vect_t *mano_giocatore) {
         // Stampa lo stato corrente del piano di gioco
         stampa_piano(piano_gioco);
     }
-    
 }
 
 tessera_t *first_match(matrice_t *piano_gioco, vect_t *mano_giocatore, comb_t *risultato) {
@@ -54,7 +53,9 @@ tessera_t *first_match(matrice_t *piano_gioco, vect_t *mano_giocatore, comb_t *r
                 return tessera;
             }
         }
-    // Ripeti questo per le posizioni in verticale (0) e in orizzontale (1)
+        // Libera la memoria allocata
+        libera_vettore(coordinate);
+    // Ripeti per le posizioni in verticale (0) e in orizzontale (1)
     } while(!risultato->orientamento++);
     // Non ho trovato nessuna tessera da posizionare
     return NULL;
