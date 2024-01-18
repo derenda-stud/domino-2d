@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "../lib/modalita_interattiva.h"
+#include "../lib/modalita_ai.h"
 #include "../lib/tessera.h"
 #include "../lib/controlli.h"
 
@@ -24,7 +25,8 @@ int main() {
     // Generazione delle tessere nella mano del giocatore
     genera_tessere(mano_giocatore);
     // Funzione per il proseguimento del gioco
-    stampa_turno(mano_giocatore, piano_gioco);
+    esegui_algoritmo(piano_gioco, mano_giocatore);
+    // stampa_turno(mano_giocatore, piano_gioco);
     // Libera la memoria occupata
     libera_vettore(mano_giocatore);
     libera_matrice(piano_gioco);

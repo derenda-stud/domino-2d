@@ -20,9 +20,9 @@ OPT = -O2
 CFLAGS = $(OPT) -std=c99 --pedantic -Wall -g $(INCDIRS)
 
 # File sorgente
-CFILES  = $(addprefix $(SRCDIR)/, main.c vettore.c struttura_dati.c tessera.c controlli.c modalita_interattiva.c)
+CFILES  = $(addprefix $(SRCDIR)/, main.c vettore.c struttura_dati.c tessera.c controlli.c modalita_interattiva.c modalita_ai.c)
 # File oggetto
-OBJECTS = $(addprefix $(OBJDIR)/, main.o vettore.o struttura_dati.o tessera.o controlli.o modalita_interattiva.o)
+OBJECTS = $(addprefix $(OBJDIR)/, main.o vettore.o struttura_dati.o tessera.o controlli.o modalita_interattiva.o modalita_ai.o)
 
 # File binario
 BINARY = iap

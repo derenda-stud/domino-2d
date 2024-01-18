@@ -51,6 +51,8 @@ void stampa_mano(vect_t *mano_giocatore);
 void stampa_estremi(estremo_t *estremi, size_t dimensione);
 // Creazione ed allocazione della memoria di una combinazione
 comb_t *crea_combinazione(coord_t inserimento, bool orientamento);
+// Inizializza i parametri essenziali di una combinazione
+void inizializza_combinazione(comb_t *combinazione);
 // Libera la memoria occupata dalla combinazione
 void libera_combinazione(comb_t *combinazione);
 

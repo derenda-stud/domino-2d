@@ -101,12 +101,18 @@ comb_t *crea_combinazione(coord_t inserimento, bool orientamento) {
     // Alloca la memoria per i puntatori alle posizioni
     combinazione->inserimento = calloc(1, sizeof(coord_t));
     combinazione->adiacente = calloc(1, sizeof(coord_t));
-    // Inizializza il valore dei parametri
+    // Imposta i parametri come passati da funzione
     *combinazione->inserimento = inserimento;
     combinazione->orientamento = orientamento;
     combinazione->rotazione = false;
     // Ritorna la nuova struttura dati creata
     return combinazione;
+}
+
+void inizializza_combinazione(comb_t *combinazione) {
+    *combinazione->inserimento = (coord_t) {0, 0};
+    combinazione->orientamento = false;
+    combinazione->rotazione = false;
 }
 
 void libera_combinazione(comb_t *combinazione) {

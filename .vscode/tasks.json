@@ -16,6 +16,7 @@
                 "tessera.c",
                 "controlli.c",
                 "modalita_interattiva.c",
+                "modalita_ai.c",
                 "-o",
                 "${fileDirname}\\iap.exe"
             ],
