@@ -21,5 +21,9 @@ void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, tessera_t *
 void imposta_cardini(matrice_t *piano_gioco, coord_t *coordinata, bool orientamento);
 // Ruota la tessera invertendo il valore dei suoi estremi
 void ruota_tessera(tessera_t *tessera);
+// Incrementa tutti gli estremi presenti sul piano di gioco
+void incrementa_estremi(matrice_t *piano_gioco);
+// Esegui le opportune operazione nel caso sia stata inserita una tessera speciale 
+void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *da_posizionare);
 
 #endif

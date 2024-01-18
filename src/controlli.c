@@ -44,13 +44,6 @@ bool posizione_valida(matrice_t *piano_gioco, coord_t coordinata, bool orientame
     return true;
 }
 
-/*
-      0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29
-  0  --  --  --  --  --  --  --  --  --  --  --  --  --  {5  [5  1]  [1  6]  {6  --  --  --  --  --  --  --  --  --  --  --
-  1  --  --  --  --  --  --  --  --  --  --  --  [4  6]  6}  {6  --  --  --  2}  {3  --  --  --  --  --  --  --  --  --  --
-  2  --  --  --  --  --  --  --  --  --  --  --  --  --  --  3}  --  --  --  --  2}  --  --  --  --  --  --  --  --  --  --
-*/
-
 unsigned int sposta_indice(size_t dimensione, unsigned int attuale, int spostamento) {
     // Controlla che il nuovo indice rientri nelle dimensioni dell'array
     if(attuale + spostamento < 0 || attuale + spostamento > dimensione - 1)
@@ -124,3 +117,11 @@ int estremi_corrispondono(matrice_t *piano_gioco, coord_t *coordinata, tessera_t
     // Non ho trovato nessuna corrispondenza
     return 0;
 }
+
+/*
+      0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29
+  0  --  --  --  --  --  --  --  --  --  --  --  --  --  {5  [5  1]  [1  6]  {6  --  --  --  --  --  --  --  --  --  --  --
+  1  --  --  --  --  --  --  --  --  --  --  --  [4  6]  6}  {6  --  --  --  2}  {3  --  --  --  --  --  --  --  --  --  --
+  2  --  --  --  --  --  --  --  --  --  --  --  --  --  --  3}  --  --   2   3  2}  --  --  --  --  --  --  --  --  --  --
+  
+*/

@@ -112,3 +112,35 @@ void ruota_tessera(tessera_t *tessera) {
     tessera->destro = tessera->sinistro;
     tessera->sinistro = temp;
 }
+
+void incrementa_estremi(matrice_t *piano_gioco) {
+    // Per ciascuna riga del piano di gioco
+    for(size_t i=0; i<piano_gioco->righe; i++) {
+        // Per ciascuna colonna del piano di gioco
+        for(size_t j=0; j<piano_gioco->colonne; j++) {
+            // Controlla che l'estremo attuale sia presente
+            if(piano_gioco->posizione[i][j].cardine) {
+                // Incrementa il valore dell'estremo corrente
+                piano_gioco->posizione[i][j].valore = (piano_gioco->posizione[i][j].valore % 6) + 1;
+            }
+        }
+    }
+}
+
+void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *da_posizionare) {
+    switch(da_posizionare->sinistro) {
+        case 11: {
+            // Incrementa tutti gli estremi sul piano di gioco
+            incrementa_estremi(piano_gioco);
+            // Memorizza gli estremi della tessera con corrispondenza
+            
+            break;
+        }
+        case 12: case 21: {
+            // Specchia gli estremi della tessera da posizionare
+            
+            break;
+        }
+        // Per la tessera [0|0] non sono necessari controlli
+    }
+}
