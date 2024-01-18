@@ -2,6 +2,7 @@
 #define _DATI_H_
 
 #include "vettore.h"
+#include <stdbool.h>
 
 // Coordinate corrispondenti del piano di gioco
 typedef struct s_coord {
@@ -14,6 +15,20 @@ typedef struct s_estremo {
     unsigned int valore;
     unsigned int cardine;
 } estremo_t;
+
+// Tessere contenute nella mano del giocatore
+typedef struct s_tessera {
+    unsigned int sinistro;
+    unsigned int destro;
+    bool speciale;
+} tessera_t;
+
+typedef struct s_combinazione {
+    coord_t *inserimento;
+    coord_t *adiacente;
+    bool rotazione;
+    bool orientamento;
+} comb_t;
 
 // Vettore dinamico con dimensione [righe * colonne]
 typedef struct s_matrice {
@@ -34,5 +49,9 @@ void stampa_piano(matrice_t *piano_gioco);
 void stampa_mano(vect_t *mano_giocatore);
 // Stampa il valore di un estremo in base al cardine
 void stampa_estremi(estremo_t *estremi, size_t dimensione);
+// Creazione ed allocazione della memoria di una combinazione
+comb_t *crea_combinazione(coord_t inserimento, bool orientamento);
+// Libera la memoria occupata dalla combinazione
+void libera_combinazione(comb_t *combinazione);
 
 #endif

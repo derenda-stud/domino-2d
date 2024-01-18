@@ -18,11 +18,11 @@ int main() {
     // Inizializzazione delle colonne con il numero di tessere indicato
     unsigned int colonne = 4 * numero_tessere;
     // La mano del giocatore e' un vettore lineare
-    vect_t *mano_giocatore = crea_vettore(sizeof(estremo_t), numero_tessere * 2);
+    vect_t *mano_giocatore = crea_vettore(sizeof(tessera_t), numero_tessere);
     // Il piano di gioco e' una matrice con righe graduali
     matrice_t *piano_gioco = crea_matrice(colonne);
-    // Generazione degli estremi nella mano del giocatore
-    genera_estremi(mano_giocatore);
+    // Generazione delle tessere nella mano del giocatore
+    genera_tessere(mano_giocatore);
     // Funzione per il proseguimento del gioco
     stampa_turno(mano_giocatore, piano_gioco);
     // Libera la memoria occupata

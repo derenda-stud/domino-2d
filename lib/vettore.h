@@ -19,7 +19,7 @@ void libera_vettore(vect_t *vettore);
 void *elemento_ad_indice(vect_t *vettore, size_t indice);
 // Inserisci un nuovo elemento in coda al vettore
 void inserimento_coda(vect_t *vettore, void *elemento);
-// Rimuovi un elemento di un vettore ad un particolare indice
-void rimuovi_ad_indice(vect_t *vettore, size_t indice);
+// Rimuovi un elemento da un vettore dato il suo indirizzo
+void rimuovi_elemento(vect_t *vettore, void *elemento);
 
 #endif

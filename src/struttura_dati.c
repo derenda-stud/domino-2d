@@ -60,11 +60,15 @@ void stampa_piano(matrice_t *piano_gioco) {
 }
 
 void stampa_mano(vect_t *mano_giocatore) {
-    // Stampa gli estremi contenuti nella mano del giocatore
-    stampa_estremi(mano_giocatore->posizione, mano_giocatore->dimensione);
+    // Stampa le tessere contenuti nella mano del giocatore
+    for(size_t i=0; i<mano_giocatore->dimensione; i++){
+        tessera_t *tessera = elemento_ad_indice(mano_giocatore, i);
+        printf(" [%2d|%2d] ", tessera->sinistro, tessera->destro);
+    }
+    printf("\n");
     // Stampa gli indici sotto ciascuna tessera
-    for(size_t i=0; i<mano_giocatore->dimensione / 2; i++) {
-        printf("   %2d   ", i);
+    for(size_t i=0; i<mano_giocatore->dimensione; i++) {
+        printf("   %2d    ", i);
     }
     printf("\n");
 }
@@ -89,4 +93,28 @@ void stampa_estremi(estremo_t *estremi, size_t dimensione) {
     }
     // Stampa il carattere per andare a capo
     printf("\n");
+}
+
+comb_t *crea_combinazione(coord_t inserimento, bool orientamento) {
+    // Alloca la memoria per il puntatore iniziali
+    comb_t *combinazione = malloc(sizeof(comb_t));
+    // Alloca la memoria per i puntatori alle posizioni
+    combinazione->inserimento = calloc(1, sizeof(coord_t));
+    combinazione->adiacente = calloc(1, sizeof(coord_t));
+    // Inizializza il valore dei parametri
+    *combinazione->inserimento = inserimento;
+    combinazione->orientamento = orientamento;
+    combinazione->rotazione = false;
+    // Ritorna la nuova struttura dati creata
+    return combinazione;
+}
+
+void libera_combinazione(comb_t *combinazione) {
+    // Libera la memoria occupata dalle posizioni
+    free(combinazione->inserimento);
+    combinazione->inserimento = NULL;
+    free(combinazione->adiacente);
+    combinazione->adiacente = NULL;
+    // Libera la memoria della struttura dati
+    free(combinazione);
 }
