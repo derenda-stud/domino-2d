@@ -36,47 +36,57 @@ void inserisci_scelta(vect_t *mano_giocatore, matrice_t *piano_gioco) {
         } break;
         case 2: {
             // Ruota la tessere presente ad un determinato indice
-            ruota_tessera(mano_giocatore, inserisci_indice(mano_giocatore, "ruotare"));
+            ruota_tessera(inserisci_indice(mano_giocatore, "ruotare"));
         } break;
     }
 }
 
-size_t inserisci_indice(vect_t *mano_giocatore, char *azione) {
+tessera_t *inserisci_indice(vect_t *mano_giocatore, char *azione) {
     // Messaggio da stampare a terminale
     char messaggio[50] = "Inserisci l'indice della tessera da ";
     // Inserisci un numero compreso tra 0 e l'indice dell'ultimo estremo
-    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, (mano_giocatore->dimensione / 2) - 1);
+    int indice_tessera = inserisci_numero_compreso(strcat(messaggio, azione), 0, mano_giocatore->dimensione - 1);
     // Restituisci l'indice dell'estremo sinistro
-    return indice_tessera * 2;
+    return elemento_ad_indice(mano_giocatore, indice_tessera);
 }
 
 void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco) {
-    // Trova i due estremi da prelevare dalla mano del giocatore
-    size_t indice_estremo = inserisci_indice(mano_giocatore, "posizionare");
+    // Memorizza l'indirizzo della tessera all'indice selezionato dall'utente
+    tessera_t *da_posizionare = inserisci_indice(mano_giocatore, "posizionare");
     // Chiedi all'utente come intende posizionare la tessera selezionata
     bool orientamento = inserisci_numero_compreso("Come vuoi posizionare la tessera? (0 in verticale, 1 in orizzontale)", 0, 1);
     // Per il primo inserimento valuta se posizionarla al centro
     if(prima_posizione(piano_gioco, 0) > ultima_posizione(piano_gioco, 0)) {
+        // Controlla che la tessera selezionata non corrisponda alle [11|11] e [12|21]
+        if(da_posizionare->speciale && da_posizionare->sinistro != 0) {
+            printf("Mossa non valida, riprova con un altra tessera\n");
+            return;
+        }
+        // Posiziona la tessera al centro del piano di gioco
         coord_t centrale = {0, piano_gioco->colonne / 2 - 1};
-        preleva_tessera(piano_gioco, mano_giocatore, indice_estremo, &centrale, orientamento);
+        preleva_tessera(piano_gioco, mano_giocatore, da_posizionare, &centrale, orientamento);
         return;
     }
-    
     // Restituisci il vettore creato dalle posizioni valide
-    estremo_t *da_posizionare = elemento_ad_indice(mano_giocatore, indice_estremo);
-    vect_t *coordinate = calcola_coordinate(piano_gioco, da_posizionare, orientamento);
-    
-    // Controlla se sia possibile effettuare almeno una mossa
-    if(coordinate->dimensione == 0) {
-        printf("Nessuna mossa disponibile con questa tessera\n");
-        return;
-    }
+    vect_t *coordinate = calcola_coordinate(piano_gioco, orientamento);
     // Seleziona la coordinate dove effettuare l'inserimento
     coord_t *coordinata = seleziona_posizione(coordinate);
-    // Preleva la tessera secondo l'orientamento indicato
-    preleva_tessera(piano_gioco, mano_giocatore, indice_estremo, coordinata, orientamento);
+    
+    comb_t *risultato = crea_combinazione(*coordinata, orientamento);
+    // Controlla che gli estremi della tessera selezionata corrispondano con quelli sul piano
+    if(estremi_corrispondono(piano_gioco, da_posizionare, risultato) != 1) {
+        printf("Mossa non valida, riprova con un altra tessera\n");
+        return;
+    }
+    // Controlla l'inserimento delle tessere speciali
+    if(da_posizionare->speciale) {
+        funzionalita_aggiuntive(piano_gioco, da_posizionare, risultato);
+    }
+    // Preleva la tessera secondo la posizione e l'orientamento indicato
+    preleva_tessera(piano_gioco, mano_giocatore, da_posizionare, coordinata, orientamento);
     // Libera la memoria occupata
     libera_vettore(coordinate);
+    libera_combinazione(risultato);
 }
 
 coord_t *seleziona_posizione(vect_t *coordinate) {
@@ -87,10 +97,11 @@ coord_t *seleziona_posizione(vect_t *coordinate) {
     printf(" - Premi 1 per scorrere alla posizione precedente\n");
     printf(" - Premi 2 per scorrere alla posizione successiva\n");
     printf(" - Premi 0 per confermare la posizione selezionata\n");
-    
+    // Scorri le coordinate finche' non viene selezionata quella da posizionare
     unsigned int scelta, indice_attuale = 0;
     coord_t *coordinata_attuale;
     do {
+        // Recupera la coordinata presente all'indice selezionato
         coordinata_attuale = elemento_ad_indice(coordinate, indice_attuale);
         printf("La posizione attuale e': (%2d,%2d)\n", coordinata_attuale->riga, coordinata_attuale->colonna);
         scelta = inserisci_numero_compreso("Seleziona un'opzione", 0, 2);
@@ -103,25 +114,23 @@ coord_t *seleziona_posizione(vect_t *coordinate) {
                     break;
         }
     } while(scelta);
-    
-    printf("Hai selezionato la posizione: (%2d,%2d)\n", coordinata_attuale->riga, coordinata_attuale->colonna);
-    
+    // Ritorna la coordinata dopo aver confermato la selezione
     return elemento_ad_indice(coordinate, indice_attuale);
 }
 
 /*
-   v                      
-  ╔═╦═╦═╦═╦═╗
-  ║ ║5║6║6║ ║ 
-  ╠═╬═╬═╬═╬═╣
-> ║ ║ ║ ║1║ ║
-  ╠═╬═╬═╬═╬═╣
-  ║ ║ ║ ║ ║ ║
-  ╠═╬═╬═╬═╬═╣
-  ║ ║ ║ ║ ║ ║
-  ╠═╬═╬═╬═╬═╣
-  ║ ║ ║ ║ ║ ║
-  ╚═╩═╩═╩═╩═╝
+   v              
+  ╔══╦══╦══╦══╦══╗
+  ║  ║[5║6]║{6║  ║ 
+  ╠══╬══╬══╬══╬══╣
+> ║  ║  ║{1║1}║  ║
+  ╠══╬══╬══╬══╬══╣
+  ║  ║{4║4}║  ║  ║
+  ╠══╬══╬══╬══╬══╣
+  ║  ║3}║[3║2]║  ║
+  ╠══╬══╬══╬══╬══╣
+  ║  ║  ║  ║  ║  ║
+  ╚══╩══╩══╩══╩══╝
 
 Scegli riga
 Precedente posizione libera     A

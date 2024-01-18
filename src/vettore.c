@@ -45,15 +45,11 @@ void inserimento_coda(vect_t *vettore, void *elemento) {
     vettore->dimensione += 1;
 }
 
-void rimuovi_ad_indice(vect_t *vettore, size_t indice) {
-    // Partendo dall'indice successivo
-    for(size_t i = indice + 1; i < vettore->dimensione; i++) {
-        // Sposta indietro gli elementi sovrascrivendo il valore precedente
-        memcpy(elemento_ad_indice(vettore, i - 1), elemento_ad_indice(vettore, i), vettore->spazio);
-    }
-    // Decrementa la capacita' e la dimensione effettiva
+void rimuovi_elemento(vect_t *vettore, void *elemento) {
+    // Recupera il numero di byte da copiare
+    size_t quantita = elemento_ad_indice(vettore, vettore->dimensione - 1) - elemento;
+    // Sovrascrivi tutti i valori precedenti a partire dalla posizione successiva
+    memmove(elemento, elemento + vettore->spazio, quantita);
+    // Decrementa la dimensione effettiva
     vettore->dimensione -= 1;
-    vettore->capacita -= 1;
-    // Rialloca la memoria eliminando l'ultima posizione
-    vettore->posizione = realloc(vettore->posizione, vettore->spazio * vettore->capacita);
 }
