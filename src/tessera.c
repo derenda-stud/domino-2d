@@ -5,7 +5,7 @@
 
 void genera_tessere(vect_t *mano_giocatore) {
     // Calcola la percentuale di tessere speciali
-    int dimensione_speciali = mano_giocatore->capacita / 4;
+    int dimensione_speciali = mano_giocatore->capacita / 2;
     // Per le posizioni in cui inserire tessere normali
     for(size_t i=0; i<mano_giocatore->capacita - dimensione_speciali; i++) {
         // Crea una tessera temporanea da copiare dentro la mano
@@ -127,18 +127,36 @@ void incrementa_estremi(matrice_t *piano_gioco) {
     }
 }
 
-void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *da_posizionare) {
-    switch(da_posizionare->sinistro) {
+void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *tessera, comb_t *risultato) {
+    // In base al valore della tessera da posizionare
+    switch(tessera->sinistro) {
+        // Copia i valori della tessera con corrispondenza
         case 11: {
             // Incrementa tutti gli estremi sul piano di gioco
             incrementa_estremi(piano_gioco);
-            // Memorizza gli estremi della tessera con corrispondenza
-            
+            // Memorizza come valore l'estremo che ha una corrispondenza
+            tessera->sinistro = tessera->destro = piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna].valore;
             break;
         }
+        // Specchia gli estremi della tessera da posizionare
         case 12: case 21: {
-            // Specchia gli estremi della tessera da posizionare
-            
+            // In base al cardine dell'estremo con una corrispondenza
+            switch(piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna].cardine) {
+                // E' inserita in orizzontale ed ha un collegamento con l'estremo successivo 
+                case 1: tessera->sinistro = piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna + 1].valore;
+                        break;
+                // E' inserita in orizzontale ed ha un collegamento con l'estremo precedente
+                case 2: tessera->sinistro = piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna - 1].valore;
+                        break;
+                // E' inserita in verticale ed ha un collegamento con l'estremo sottostante
+                case 3: tessera->sinistro = piano_gioco->posizione[risultato->adiacente->riga + 1][risultato->adiacente->colonna].valore;
+                        break;
+                // E' inserita in verticale ed ha un collegamento con l'estremo superiore
+                case 4: tessera->sinistro = piano_gioco->posizione[risultato->adiacente->riga - 1][risultato->adiacente->colonna].valore;
+                        break;
+            }
+            // Memorizza il valore dell'estremo destro pari alla posizione adiacente
+            tessera->destro = piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna].valore;
             break;
         }
         // Per la tessera [0|0] non sono necessari controlli

@@ -24,6 +24,6 @@ void ruota_tessera(tessera_t *tessera);
 // Incrementa tutti gli estremi presenti sul piano di gioco
 void incrementa_estremi(matrice_t *piano_gioco);
 // Esegui le opportune operazione nel caso sia stata inserita una tessera speciale 
-void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *da_posizionare);
+void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *da_posizionare, comb_t *risultato);
 
 #endif

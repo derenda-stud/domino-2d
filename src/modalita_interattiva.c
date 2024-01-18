@@ -71,20 +71,22 @@ void seleziona_tessera(vect_t *mano_giocatore, matrice_t *piano_gioco) {
     vect_t *coordinate = calcola_coordinate(piano_gioco, orientamento);
     // Seleziona la coordinate dove effettuare l'inserimento
     coord_t *coordinata = seleziona_posizione(coordinate);
+    
+    comb_t *risultato = crea_combinazione(*coordinata, orientamento);
+    // Controlla che gli estremi della tessera selezionata corrispondano con quelli sul piano
+    if(estremi_corrispondono(piano_gioco, da_posizionare, risultato) != 1) {
+        printf("Mossa non valida, riprova con un altra tessera\n");
+        return;
+    }
     // Controlla l'inserimento delle tessere speciali
     if(da_posizionare->speciale) {
-        funzionalita_aggiuntive(piano_gioco, da_posizionare);
-    } else {
-        // Controlla che gli estremi della tessera selezionata corrispondano con quelli sul piano
-        if(estremi_corrispondono(piano_gioco, coordinata, da_posizionare, orientamento) != 1) {
-            printf("Mossa non valida, riprova con un altra tessera\n");
-            return;
-        }
+        funzionalita_aggiuntive(piano_gioco, da_posizionare, risultato);
     }
     // Preleva la tessera secondo la posizione e l'orientamento indicato
     preleva_tessera(piano_gioco, mano_giocatore, da_posizionare, coordinata, orientamento);
     // Libera la memoria occupata
     libera_vettore(coordinate);
+    libera_combinazione(risultato);
 }
 
 coord_t *seleziona_posizione(vect_t *coordinate) {
