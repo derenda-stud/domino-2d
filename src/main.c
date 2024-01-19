@@ -12,6 +12,7 @@
 /* Progetto Domino Lineare di Bertoncello Nicolas, Derevytskyy Alessandro */
 
 int main() {
+    int scelta = menu();
     // Inizializza la generazione dei numeri casuali
     srand(time(NULL));
     // Richiesta da parte dell'utente per il numero di tessere
@@ -25,13 +26,28 @@ int main() {
     // Generazione delle tessere nella mano del giocatore
     genera_tessere(mano_giocatore);
     // Funzione per il proseguimento del gioco
-    // esegui_algoritmo(piano_gioco, mano_giocatore);
-    stampa_turno(mano_giocatore, piano_gioco);
+    if(scelta == 1) stampa_turno(mano_giocatore, piano_gioco);
+    else esegui_algoritmo(piano_gioco, mano_giocatore);
+    //calcola il punteggio e lo visualizza a schermo
+    int punti = calcola_punti(piano_gioco);
+    printf("Hai effettuato %d punti!", punti);
     // Libera la memoria occupata
     libera_vettore(mano_giocatore);
     libera_matrice(piano_gioco);
     // Terminazione del programma
     return 0;
+}
+
+//crea il menu principale
+//ho creato una funzione perche' la usero successivamente se dovro' fare un menu piu' decente.
+int menu(){
+    char *messaggio = "\bBenevenuto nel domino lineare\n\n"
+                      "Seleziona una modalita' di gioco:\n"
+                      "\t[1] Modalita' interattiva\n"
+                      "\t[2] Modalita' AI\n\n"
+                      "scelta";
+    
+    return inserisci_numero_compreso(messaggio, 1, 2);
 }
 
 /*

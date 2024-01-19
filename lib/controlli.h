@@ -19,5 +19,7 @@ bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco);
 bool mossa_legale(matrice_t *piano_gioco, vect_t *coordinate, tessera_t *tessera, comb_t *risultato);
 // Controlla se la tessera da posizionare abbia almeno un estremo con una corrispondenza
 int estremi_corrispondono(matrice_t *piano_gioco, tessera_t *tessera, comb_t *risultato);
+//calcola i punti effettuati a fine partita.
+int calcola_punti(matrice_t *piano_gioco);
 
 #endif

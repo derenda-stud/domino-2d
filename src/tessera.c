@@ -5,7 +5,7 @@
 
 void genera_tessere(vect_t *mano_giocatore) {
     // Calcola la percentuale di tessere speciali
-    int dimensione_speciali = 0;
+    int dimensione_speciali = mano_giocatore->capacita / 4;
     // Per le posizioni in cui inserire tessere normali
     for(size_t i=0; i<mano_giocatore->capacita - dimensione_speciali; i++) {
         // Crea una tessera temporanea da copiare dentro la mano

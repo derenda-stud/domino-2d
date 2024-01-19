@@ -127,3 +127,15 @@ int estremi_corrispondono(matrice_t *piano_gioco, tessera_t *tessera, comb_t *ri
     // Non ho trovato nessuna corrispondenza
     return 0;
 }
+
+int calcola_punti(matrice_t *piano_gioco){
+    int punti = 0;
+    for(size_t y = 0; y < piano_gioco->righe; y++){
+        for(size_t x = 0; x < piano_gioco->colonne; x++){
+            int temp = 0;
+            if((temp = piano_gioco->posizione[y][x].valore) != 0)
+                punti += temp; 
+        }
+    }
+    return punti;
+}
