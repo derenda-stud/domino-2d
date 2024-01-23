@@ -9,10 +9,6 @@
 void genera_tessere(vect_t *mano_giocatore);
 // Ritorna un vettore contenente le coordinate delle posizioni valide
 vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento);
-// Scorri in avanti le colonne del piano di gioco per trovare la prima posizione utile
-unsigned int prima_posizione(matrice_t *piano_gioco, unsigned int riga);
-// Scorri a ritroso le colonne del piano di gioco per trovare l'ultima posizione utile
-unsigned int ultima_posizione(matrice_t *piano_gioco, unsigned int riga);
 // Stampa riga e colonna di ciascuna coordinata
 void stampa_coordinate(vect_t *coordinate);
 // Preleva una tessera dalla mano del giocatore e inseriscila nel piano di gioco seguendo le indicazioni
@@ -25,5 +21,7 @@ void ruota_tessera(tessera_t *tessera);
 void incrementa_estremi(matrice_t *piano_gioco);
 // Esegui le opportune operazione nel caso sia stata inserita una tessera speciale 
 void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *da_posizionare, comb_t *risultato);
+// Calcola il punteggio ottenuto al termine della partita
+unsigned int calcola_punteggio(matrice_t *piano_gioco);
 
 #endif

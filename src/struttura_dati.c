@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "../lib/struttura_dati.h"
+#include "../lib/controlli.h"
 
 matrice_t *crea_matrice(size_t colonne) {
     // Alloca la memoria per il puntatore alla matrice
@@ -43,32 +44,33 @@ void libera_matrice(matrice_t *matrice) {
 }
 
 void stampa_piano(matrice_t *piano_gioco) {
-    // Calcola la x minima e massima del piano di gioco in base alle tessere presenti
-    int x_max = 0, x_min = 0;
-    for(size_t y = 0; y < piano_gioco->righe; y++){
-        for(size_t x = 0; x < piano_gioco->colonne; x++){
-            // Se nella posizione [x, y] non e' presente una tessera passa all'iterazione successiva
-            if (piano_gioco->posizione[y][x].cardine != 0) {
-                // Assegna a x_min la colonna della prima tessera della prima riga
-                if (x_min == 0) x_min = x;
-                // Assegna a x_min la colonna della tessera piu' a sinistra del piano
-                else if (x_min > x) x_min = x;
-                // Assegna a x_max la colonna della tessera piu' a destra del piano
-                if (x_max < x) x_max = x;
-            }
+    // Inizializza la colonna massima e minima
+    unsigned int massimo = 0, minimo = piano_gioco->colonne - 1;
+    // Per ciascuna riga successiva del piano di gioco
+    for(size_t i = 0; i < piano_gioco->righe; i++){
+        // Calcola minimo e massimo tra le colonne inserite
+        unsigned int prima = prima_posizione(piano_gioco, i);
+        unsigned int ultima = ultima_posizione(piano_gioco, i);
+        // Se la colonna calcolata e' inferiore al minimo
+        if(prima < minimo) {
+            // Imposta un nuovo minimo
+            minimo = prima;
+        }
+        // Se la colonna calcolata e' superiore al massimo
+        if(ultima > massimo) {
+            // Imposta un nuovo massimo
+            massimo = ultima;
         }
     }
-    // Assegna a x_min due posizioni precedenti al centro se il piano di gioco e' vuoto
-    if(x_min == 0) x_min = (piano_gioco->colonne / 2) - 3;
-    // Assegna a x_min due posizioni precedenti solo se non sfora dal piano
-    else if(x_min < 2) x_min = 0;
-    else x_min -= 2;
-    // Assegna a x_max tre posizioni successive solo se non sfora dal piano, assegna tre posizioni successive al centro se il piano di gioco e' vuoto
-    x_max = x_max == 0 || (x_max + 3 >= piano_gioco->colonne) ? (piano_gioco->colonne / 2) + 3 : (x_max + 3);
-
+    // Quando il piano di gioco e' vuoto
+    if(massimo < minimo) {
+        // Stampa solo uno spazio vuoto
+        printf(" -- \n");
+        return;
+    }
     // Stampa un intestazione contenente le colonne
     printf("    ");
-    for(size_t j=x_min; j<x_max; j++) {
+    for(size_t j=minimo; j<=massimo; j++) {
         printf(" %2d ", j);
     }
     printf("\n");
@@ -77,7 +79,7 @@ void stampa_piano(matrice_t *piano_gioco) {
         // Stampa l'indice della riga corrente
         printf(" %2d ", i);
         // Stampa gli elementi presenti nella riga
-        stampa_estremi(piano_gioco->posizione[i], x_max, x_min);
+        stampa_estremi(piano_gioco->posizione[i], massimo, minimo);
     }
 }
 
@@ -95,9 +97,9 @@ void stampa_mano(vect_t *mano_giocatore) {
     printf("\n");
 }
 
-void stampa_estremi(estremo_t *estremi, size_t x_max, size_t x_min) {
+void stampa_estremi(estremo_t *estremi, size_t massimo, size_t minimo) {
     // Per ciascun estremo nella struttura dati
-    for(size_t i = x_min; i < x_max; i++) {
+    for(size_t i = minimo; i <= massimo; i++) {
         // In base al valore assunto dal cardine
         switch(estremi[i].cardine) {
             // Stampa correttamente l'estremo

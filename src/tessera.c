@@ -31,6 +31,13 @@ void genera_tessere(vect_t *mano_giocatore) {
 vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento) {
     // Crea il vettore contenente le coordinate
     vect_t *coordinate = crea_vettore(sizeof(coord_t), 0);
+    
+    if(prima_posizione(piano_gioco, 0) > ultima_posizione(piano_gioco, 0)) {
+        coord_t centrale = {0, piano_gioco->colonne / 2 - 1};
+        inserimento_coda(coordinate, &centrale);
+        return coordinate;
+    }
+    
     // Per ciascuna riga del piano di gioco
     for(size_t i=0; i<piano_gioco->righe; i++) {
         // Calcolo la prima e l'ultima posizione utile
@@ -49,32 +56,6 @@ vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento) {
     }
     // Ritorna il nuovo vettore creato
     return coordinate;
-}
-
-unsigned int prima_posizione(matrice_t *piano_gioco, unsigned int riga) {
-    // Per ciascuna colonna fino a raggiungere il limite sinistro
-    for(size_t j=0; j<piano_gioco->colonne - 2; j++) {
-        // Controlla che ci sia una posizione occupata
-        if(piano_gioco->posizione[riga][j].cardine) {
-            // Ritorna la colonna precedente libera
-            return j - 1;
-        }
-    }
-    // Non avendo trovato colonne, ritorno l'ultima
-    return piano_gioco->colonne - 1;
-}
-
-unsigned int ultima_posizione(matrice_t *piano_gioco, unsigned int riga) {
-    // Dal limite sinistro fino alla prima colonna valida
-    for(size_t j=piano_gioco->colonne - 2; j>=0; j--) {
-        // Controlla che ci sia una posizione occupata
-        if(piano_gioco->posizione[riga][j].cardine) {
-            // Ritorna la colonna successiva libera
-            return j + 1;
-        }
-    }
-    // Non avendo trovato colonne, ritorno la prima
-    return 0;
 }
 
 void stampa_coordinate(vect_t *coordinate) {
@@ -135,7 +116,8 @@ void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *tessera, comb_t 
             // Incrementa tutti gli estremi sul piano di gioco
             incrementa_estremi(piano_gioco);
             // Memorizza come valore l'estremo che ha una corrispondenza
-            tessera->sinistro = tessera->destro = piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna].valore;
+            tessera->sinistro = piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna].valore;
+            tessera->destro = piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna].valore;
             break;
         }
         // Specchia gli estremi della tessera da posizionare
@@ -161,4 +143,18 @@ void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *tessera, comb_t 
         }
         // Per la tessera [0|0] non sono necessari controlli
     }
+}
+
+unsigned int calcola_punteggio(matrice_t *piano_gioco){
+    unsigned int punti = 0;
+    // Per ciascuna riga del piano di gioco
+    for(size_t i = 0; i < piano_gioco->righe; i++){
+        // Per ciascuna colonna del piano di gioco
+        for(size_t j = 0; j < piano_gioco->colonne; j++){
+            if(piano_gioco->posizione[i][j].cardine) {
+                punti += piano_gioco->posizione[i][j].valore;
+            }
+        }
+    }
+    return punti;
 }

@@ -47,8 +47,8 @@ void libera_matrice(matrice_t *matrice);
 void stampa_piano(matrice_t *piano_gioco);
 // Stampa gli estremi presenti nella mano del giocatore
 void stampa_mano(vect_t *mano_giocatore);
-// Stampa il valore di un estremo in base al cardine
-void stampa_estremi(estremo_t *estremi, size_t x_max, size_t x_min);
+// Stampa una riga di estremi entro un limite stabilito
+void stampa_estremi(estremo_t *estremi, size_t minimo, size_t massimo);
 // Creazione ed allocazione della memoria di una combinazione
 comb_t *crea_combinazione(coord_t inserimento, bool orientamento);
 // Inizializza i parametri essenziali di una combinazione
