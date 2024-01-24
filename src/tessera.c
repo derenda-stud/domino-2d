@@ -31,13 +31,15 @@ void genera_tessere(vect_t *mano_giocatore) {
 vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento) {
     // Crea il vettore contenente le coordinate
     vect_t *coordinate = crea_vettore(sizeof(coord_t), 0);
-    
+    // Se non sono ancora state inserite tessere il piano di gioco e' vuoto
     if(prima_posizione(piano_gioco, 0) > ultima_posizione(piano_gioco, 0)) {
+        // Calcola la coordinata della posizione centrale
         coord_t centrale = {0, piano_gioco->colonne / 2 - 1};
+        // Inserisci come unica coordinata quella centrale
         inserimento_coda(coordinate, &centrale);
+        // Non fare ulteriore inserimenti
         return coordinate;
     }
-    
     // Per ciascuna riga del piano di gioco
     for(size_t i=0; i<piano_gioco->righe; i++) {
         // Calcolo la prima e l'ultima posizione utile

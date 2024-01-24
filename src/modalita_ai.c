@@ -13,7 +13,7 @@ void esegui_algoritmo(matrice_t *piano_gioco, vect_t *mano_giocatore) {
     tessera_t *da_inserire;
     
     // Continua la partita finche' sono disponbili tessere da posizionare
-    while((da_inserire = most_frequent(piano_gioco, mano_giocatore, risultato)) != NULL) {
+    while((da_inserire = first_match(piano_gioco, mano_giocatore, risultato)) != NULL) {
         // Stampa le tessere rimaste nella mano del giocatore
         stampa_mano(mano_giocatore);
         printf("Ho deciso di posizionare la tessera [%d|%d]\n", da_inserire->sinistro, da_inserire->destro);

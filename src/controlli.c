@@ -112,44 +112,69 @@ bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco) {
 }
 
 int mossa_legale(matrice_t *piano_gioco, coord_t *coordinata, tessera_t *tessera, comb_t *risultato) {
-    /* // Se l'unica coordinate presente e' quella centrale
+    // Se l'unica coordinate presente e' quella centrale
     if(coordinata->riga == 0 && coordinata->colonna == piano_gioco->colonne / 2 - 1) {
         // Controlla che non sia stata inserita una speciale diversa da [0|0]
         if(tessera->speciale && tessera->sinistro != 0) return false;
         // Altrimenti l'inserimento e' sempre valido
         return true;
-    } */
-    // Nei casi rimanenti controlla che almeno uno degli estremi corrisponda
-    int corrispondenza = estremi_corrispondono(piano_gioco, coordinata, tessera, risultato);
-    risultato->rotazione = corrispondenza - 1;
-    return corrispondenza;
+    }
+    // Recupera l'indirizzo dell'estremo del piano alla posizione indicata
+    estremo_t *estremo_piano = &piano_gioco->posizione[coordinata->riga][coordinata->colonna];
+    
+    // Controlla che la tessera da inserire abbia almeno una corrispondenza
+    int corrente = estremi_corrispondono(estremo_piano, coordinata, tessera, risultato);   
+    // Per l'inserimento in orizzontale
+    if(risultato->orientamento) {
+        goto fine;
+    // L'inserimento in verticale richiede invece ulteriori controlli
+    } else {
+        goto fine;
+    }
+    fine:
+    // Imposta il valore della variabile booleana a [0/1]
+    risultato->rotazione = corrente - 1;
+    // Ritorna il valore ritornato dalla corrispondenza
+    return corrente;
 }
 
-int estremi_corrispondono(matrice_t *piano_gioco, coord_t *coordinata, tessera_t *tessera, comb_t *risultato) {
-    // Calcola l'indirizzo dell'estremo del piano in base alla posizione fornita
-    estremo_t *estremo_piano = &piano_gioco->posizione[coordinata->riga][coordinata->colonna];
-    // Controlla che l'estremo sinistro sia presente
-    if((estremo_piano - 1)->cardine) {
-        // La coordinata adiacente corrisponde con quella precedente
+int estremi_corrispondono(estremo_t *estremo, coord_t *coordinata, tessera_t *tessera, comb_t *risultato) {
+    // Memorizza i valori di controllo
+    int controllo_sx = 0, controllo_dx = 0;
+    // Controlla che esista l'estremo precedente
+    if((estremo - 1)->cardine) {
+        // Assegna la posizione precedente come coordinata adiacente
         *(risultato->adiacente) = (coord_t) {coordinata->riga, coordinata->colonna - 1};
-        // Inserisci mantenendo l'ordine quando stai lavorando con le tessere speciali
-        if((estremo_piano - 1)->valore == 0 || tessera->speciale) return 1;
-        // Quando l'estremo sinistro della tessera corrisponde mantieni l'ordine
-        if((estremo_piano - 1)->valore == tessera->sinistro) return 1;
-        // Quando l'estremo destro della tessera corrisponde ruota la tessera
-        if((estremo_piano - 1)->valore == tessera->destro) return 2;
+        // Le tessere speciali non necessitano di controlli
+        if(tessera->speciale) return true;
+        // Controlla l'inserimento mantenendo l'ordine
+        if((estremo - 1)->valore == tessera->sinistro) controllo_sx = 1;
+        // Controlla l'inserimento girando la tessera
+        else if((estremo - 1)->valore == tessera->destro) controllo_sx = 2;
     }
-    // Controlla che l'estremo destro sia presente
-    if((estremo_piano + risultato->orientamento + 1)->cardine) {
-        // La coordinata adiacente corrisponde con quella successiva in base all'orientamento
+    // Controlla che esista l'estremo successivo
+    if((estremo + risultato->orientamento + 1)->cardine) {
+        // Assegna la posizione successiva come coordinata adiacente
         *(risultato->adiacente) = (coord_t) {coordinata->riga, coordinata->colonna + risultato->orientamento + 1};
-        // Inserisci mantenendo l'ordine quando stai lavorando con le tessere speciali
-        if((estremo_piano + risultato->orientamento + 1)->valore == 0 || tessera->speciale) return 1;
-        // Mantieni l'ordine se in orizzontale, ruota la tessera se in verticale
-        if((estremo_piano + risultato->orientamento + 1)->valore == tessera->destro) return 1 + !risultato->orientamento;
-        // Mantieni l'ordine se in verticale, ruota la tessera se in orizzontale
-        if((estremo_piano + risultato->orientamento + 1)->valore == tessera->sinistro) return 1 + risultato->orientamento;
+        // Le tessere speciali non necessitano di controlli
+        if(tessera->speciale) return true;
+        /* In base all'orientamento della tessera l'estremo successivo corrisponde:
+            - al valore sinistro in orizzontale -> inserisci girando la tessera
+            - al valore sinistro in verticale   -> inserisci mantenendo l'ordine
+        */
+        if((estremo + risultato->orientamento + 1)->valore == tessera->sinistro) controllo_dx = 1 + risultato->orientamento;
+        /*
+            - al valore destro in orizzontale   -> inserisci mantenendo l'ordine
+            - al valore destro in verticale     -> inserisci girando la tessera
+        */
+        else if((estremo + risultato->orientamento + 1)->valore == tessera->destro) controllo_dx = 1 + !risultato->orientamento;
     }
-    // Non ho trovato nessuna corrispondenza ???
-    return !(estremo_piano - 1)->cardine && !(estremo_piano + risultato->orientamento + 1)->cardine;
+    // Il risultato del controllo e' stabilito tramite un'operazione bitwise
+    int corrispondenza = controllo_sx ^ controllo_dx;
+    // Se entrambi gli estremi appartengono alla speciale [0|0] posiziona mantenendo l'ordine
+    if(!(estremo - 1)->valore && !(estremo + risultato->orientamento + 1)->valore) return true;
+    // Non ci sono corrispondenze quando non ci sono estremi oppure i valori sono discordi
+    if(corrispondenza == 0 || corrispondenza == 3) return false;
+    // Altrimenti inserisci la tessera secondo la corrispondenza indicata
+    return corrispondenza;
 }
