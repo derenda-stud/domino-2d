@@ -2,7 +2,7 @@ var indexSectionsWithContent =
 {
   0: "acdefgilmoprstuv",
   1: "s",
-  2: "cmstv",
+  2: "cmrstv",
   3: "acefgilmprsu",
   4: "acdioprsv",
   5: "cemtv",
@@ -22,12 +22,12 @@ var indexSectionNames =
 
 var indexSectionLabels =
 {
-  0: "All",
-  1: "Data Structures",
-  2: "Files",
-  3: "Functions",
-  4: "Variables",
-  5: "Typedefs",
-  6: "Pages"
+  0: "Tutto",
+  1: "Strutture dati",
+  2: "File",
+  3: "Funzioni",
+  4: "Variabili",
+  5: "Ridefinizioni di tipo (typedef)",
+  6: "Pagine"
 };
 

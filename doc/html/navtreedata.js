@@ -26,19 +26,19 @@ var NAVTREE =
 [
   [ "Domino 2D", "index.html", [
     [ "Pagina introduttiva", "index.html", null ],
-    [ "Data Structures", "annotated.html", [
-      [ "Data Structures", "annotated.html", "annotated_dup" ],
-      [ "Data Fields", "functions.html", [
-        [ "All", "functions.html", null ],
-        [ "Variables", "functions_vars.html", null ]
+    [ "Strutture dati", "annotated.html", [
+      [ "Strutture dati", "annotated.html", "annotated_dup" ],
+      [ "Campi dei dati", "functions.html", [
+        [ "Tutto", "functions.html", null ],
+        [ "Variabili", "functions_vars.html", null ]
       ] ]
     ] ],
-    [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ],
-      [ "Globals", "globals.html", [
-        [ "All", "globals.html", null ],
-        [ "Functions", "globals_func.html", null ],
-        [ "Typedefs", "globals_type.html", null ]
+    [ "File", "files.html", [
+      [ "Elenco dei file", "files.html", "files_dup" ],
+      [ "Elementi globali", "globals.html", [
+        [ "Tutto", "globals.html", null ],
+        [ "Funzioni", "globals_func.html", null ],
+        [ "Ridefinizioni di tipo (typedef)", "globals_type.html", null ]
       ] ]
     ] ]
   ] ]
@@ -49,5 +49,5 @@ var NAVTREEINDEX =
 "annotated.html"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'cliccare per disabilitare la sincronizzazione del pannello';
+var SYNCOFFMSG = 'cliccare per abilitare la sincronizzazione del pannello';
