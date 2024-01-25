@@ -6,7 +6,7 @@
 #include "tessera.h"
 
 // Chiedi all'utente il numero di tessere con cui vuole giocare
-unsigned int inserisci_numero_tessere();
+unsigned int inserisci_numero_tessere(void);
 // Chiedi all'utente un numero compreso tra un estremo minimo e massimo
 unsigned int inserisci_numero_compreso(char *messaggio, unsigned int minimo, unsigned int massimo);
 // Valuta se una posizione sul piano di gioco permette l'inserimento di una tessera
@@ -22,6 +22,6 @@ bool mosse_disponibili(vect_t *mano_giocatore, matrice_t *piano_gioco);
 // Controlla che esista una mossa legale tra le posizioni valide
 int mossa_legale(matrice_t *piano_gioco, coord_t *coordinata, tessera_t *tessera, comb_t *risultato);
 // Controlla se la tessera da posizionare abbia almeno un estremo con una corrispondenza
-int estremi_corrispondono(estremo_t *estremo, coord_t *coordinata, tessera_t *tessera, comb_t *risultato);
+int estremi_corrispondono(matrice_t *piano_gioco, coord_t coordinata, tessera_t tessera, comb_t *risultato);
 
 #endif

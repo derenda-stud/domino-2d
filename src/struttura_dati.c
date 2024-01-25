@@ -62,6 +62,7 @@ void stampa_piano(matrice_t *piano_gioco) {
             massimo = ultima;
         }
     }
+    printf("Piano di gioco:\n");
     // Quando il piano di gioco e' vuoto
     if(massimo < minimo) {
         // Stampa solo uno spazio vuoto
@@ -70,29 +71,32 @@ void stampa_piano(matrice_t *piano_gioco) {
     }
     // Stampa un intestazione contenente le colonne
     printf("    ");
-    for(size_t j=minimo; j<=massimo; j++) {
-        printf(" %2d ", j);
+    for(unsigned int j=minimo; j<=massimo; j++) {
+        printf(" %2u ", j);
     }
     printf("\n");
     // Per ogni riga della piano_gioco
-    for(size_t i=0; i<piano_gioco->righe; i++) {
+    for(unsigned int i=0; i<piano_gioco->righe; i++) {
         // Stampa l'indice della riga corrente
-        printf(" %2d ", i);
+        printf(" %2u ", i);
         // Stampa gli elementi presenti nella riga
         stampa_estremi(piano_gioco->posizione[i], massimo, minimo);
     }
 }
 
 void stampa_mano(vect_t *mano_giocatore) {
-    // Stampa le tessere contenuti nella mano del giocatore
+    printf("Mano del giocatore:\n");
+    // Per ciascuna tessera nella mano del giocatore
     for(size_t i=0; i<mano_giocatore->dimensione; i++){
+        // Recupera l'indirizzo della tessera corrente
         tessera_t *tessera = elemento_ad_indice(mano_giocatore, i);
-        printf(" [%2d|%2d] ", tessera->sinistro, tessera->destro);
+        // Stampa il valore dei due estremi corrispondenti
+        printf(" [%2u|%2u] ", tessera->sinistro, tessera->destro);
     }
     printf("\n");
     // Stampa gli indici sotto ciascuna tessera
     for(size_t i=0; i<mano_giocatore->dimensione; i++) {
-        printf("   %2d    ", i);
+        printf("   %2zu    ", i);
     }
     printf("\n");
 }
@@ -103,13 +107,13 @@ void stampa_estremi(estremo_t *estremi, size_t massimo, size_t minimo) {
         // In base al valore assunto dal cardine
         switch(estremi[i].cardine) {
             // Stampa correttamente l'estremo
-            case 1: printf(" [%d ", estremi[i].valore); // >
+            case 1: printf(" [%u ", estremi[i].valore); // >
                     break;
-            case 2: printf(" %d] ", estremi[i].valore); // <
+            case 2: printf(" %u] ", estremi[i].valore); // <
                     break;
-            case 3: printf(" {%d ", estremi[i].valore); // v
+            case 3: printf(" {%u ", estremi[i].valore); // v
                     break;
-            case 4: printf(" %d} ", estremi[i].valore); // ^
+            case 4: printf(" %u} ", estremi[i].valore); // ^
                     break;
             // Quando non e' stato memorizzato un valore stampa uno spazio vuoto
             default: printf(" -- ");

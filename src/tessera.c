@@ -5,7 +5,7 @@
 
 void genera_tessere(vect_t *mano_giocatore) {
     // Calcola la percentuale di tessere speciali
-    int dimensione_speciali = mano_giocatore->capacita / 4;
+    int dimensione_speciali = 0; // mano_giocatore->capacita / 4;
     // Per le posizioni in cui inserire tessere normali
     for(size_t i=0; i<mano_giocatore->capacita - dimensione_speciali; i++) {
         // Crea una tessera temporanea da copiare dentro la mano
@@ -66,19 +66,21 @@ void stampa_coordinate(vect_t *coordinate) {
         // Preleva la coordinata attuale alla posizione indicata
         coord_t *attuale = elemento_ad_indice(coordinate, i);
         // Stampa formattata della riga e della colonna attuale
-        printf("(%2d,%2d)\n", attuale->riga, attuale->colonna);
+        printf("(%2u,%2u)\n", attuale->riga, attuale->colonna);
     }
 }
 
-void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, tessera_t *tessera, coord_t *coordinata, bool orientamento) {
+void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, tessera_t *tessera, coord_t *coordinata, comb_t *risultato) {
     // Controlla se sia necessario aggiungere una nuova riga
-    if(!orientamento && coordinata->riga + 1 >= piano_gioco->righe) aggiungi_riga(piano_gioco);
+    if(!risultato->orientamento && coordinata->riga + 1 >= piano_gioco->righe) aggiungi_riga(piano_gioco);
+    // Valuta se sia necessario ruotare la tessera
+    if(risultato->rotazione) ruota_tessera(tessera);
     // Memorizza l'estremo sinistro nella posizione corrente
     piano_gioco->posizione[coordinata->riga][coordinata->colonna].valore = tessera->sinistro;
     // Memorizza l'estremo destro nella posizione successiva/sottostante
-    piano_gioco->posizione[coordinata->riga + !orientamento][coordinata->colonna + orientamento].valore = tessera->destro;
+    piano_gioco->posizione[coordinata->riga + !risultato->orientamento][coordinata->colonna + risultato->orientamento].valore = tessera->destro;
     // Imposta i cardini delle due posizioni da occupare
-    imposta_cardini(piano_gioco, coordinata, orientamento);
+    imposta_cardini(piano_gioco, coordinata, risultato->orientamento);
     // Rimuovi la tessera prelevata dalla mano del giocatore
     rimuovi_elemento(mano_giocatore, tessera);
 }
@@ -139,7 +141,7 @@ void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *tessera, comb_t 
                 case 4: tessera->sinistro = piano_gioco->posizione[risultato->adiacente->riga - 1][risultato->adiacente->colonna].valore;
                         break;
             }
-            // Memorizza il valore dell'estremo destro pari alla posizione adiacente
+            // Memorizza il valore dell'estremo sinistro pari alla posizione adiacente
             tessera->destro = piano_gioco->posizione[risultato->adiacente->riga][risultato->adiacente->colonna].valore;
             break;
         }
@@ -148,15 +150,19 @@ void funzionalita_aggiuntive(matrice_t *piano_gioco, tessera_t *tessera, comb_t 
 }
 
 unsigned int calcola_punteggio(matrice_t *piano_gioco){
+    // Inizializza il conteggio
     unsigned int punti = 0;
     // Per ciascuna riga del piano di gioco
     for(size_t i = 0; i < piano_gioco->righe; i++){
         // Per ciascuna colonna del piano di gioco
         for(size_t j = 0; j < piano_gioco->colonne; j++){
+            // Controlla la presenza dell'estremo
             if(piano_gioco->posizione[i][j].cardine) {
+                // Incrementa il punteggio con il valore corrente
                 punti += piano_gioco->posizione[i][j].valore;
             }
         }
     }
+    // Ritorna il punteggio calcolato
     return punti;
 }

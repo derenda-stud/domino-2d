@@ -11,8 +11,8 @@ void genera_tessere(vect_t *mano_giocatore);
 vect_t *calcola_coordinate(matrice_t *piano_gioco, bool orientamento);
 // Stampa riga e colonna di ciascuna coordinata
 void stampa_coordinate(vect_t *coordinate);
-// Preleva una tessera dalla mano del giocatore e inseriscila nel piano di gioco seguendo le indicazioni
-void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, tessera_t *tessera, coord_t *coordinata, bool orientamento);
+// Preleva una tessera dalla mano del giocatore e inseriscila nel piano di gioco in base alla corrispondenza
+void preleva_tessera(matrice_t *piano_gioco, vect_t *mano_giocatore, tessera_t *tessera, coord_t *coordinata, comb_t *risultato);
 // Imposta i cardini delle due posizioni da riempire secondo l'orientamento stabilito
 void imposta_cardini(matrice_t *piano_gioco, coord_t *coordinata, bool orientamento);
 // Ruota la tessera invertendo il valore dei suoi estremi
